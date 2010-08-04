@@ -1,0 +1,19 @@
+SlopPy: A Python interpreter that facilitates sloppy, error-tolerant
+data parsing and analysis
+
+Copyright 2010 Philip J. Guo (pg@cs.stanford.edu)
+All rights reserved.
+
+SlopPy carries the same license as the enclosing Python distribution:
+http://www.python.org/psf/license/ 
+
+---
+
+This git repository was created on 2010-08-04
+
+Most files here belong to a fresh Python 2.6.3 distribution
+(the first commit in this repository is an unmodified version of Python
+2.6.3; see README for the Python 2.6.3 documentation)
+
+  http://www.python.org/ftp/python/2.6.3/Python-2.6.3.tgz
+
