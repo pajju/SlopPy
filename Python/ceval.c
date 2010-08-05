@@ -2595,6 +2595,25 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
 		if (why == WHY_RERAISE)
 			why = WHY_EXCEPTION;
 
+    // pgbovine - catch certain types of exceptions and assign a special
+    // 'NA' value to them
+    if (why == WHY_EXCEPTION) {
+      PyThreadState *tstate = PyThreadState_GET();
+      PyObject* p_type = tstate->curexc_type;
+      //PyObject_Print(p_type, stdout, 0); printf("\n");
+
+      // only handle certain exception types specially
+      if ((p_type == PyExc_ZeroDivisionError) ||
+          (p_type == PyExc_TypeError)) {
+        //PyErr_Print();
+        PyErr_Clear();
+        why = WHY_NOT;
+        PyObject* tmp = PyString_FromString("<NA>");
+        x = tmp; // x is the 'result'
+        SET_TOP(tmp); // clobber top of stack with it (TODO: is this always correct?)
+      }
+    }
+
 		/* Unwind stacks if a (pseudo) exception occurred */
 
 fast_block_end:
