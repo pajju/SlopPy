@@ -13,25 +13,38 @@
 #include "NAobject.h"
 #include "slop.h"
 
+static PyObject *
+NA_repr(SlopNAObject *self)
+{
+  PyObject* type_repr = PyObject_Repr(self->exc_type);
+  PyObject* value_repr = PyObject_Repr(self->exc_value);
+
+  PyObject* repr = PyTuple_Pack(2, type_repr, value_repr);
+
+  PyObject* fmt = PyString_FromString("NA(%s, %s)");
+  PyObject* ret = PyString_Format(fmt, repr);
+
+  Py_DECREF(fmt);
+  Py_DECREF(value_repr);
+  Py_DECREF(type_repr);
+  Py_DECREF(repr);
+
+  return ret;
+}
+
 static int
 NA_print(SlopNAObject *self, FILE *fp, int flags)
 {
 	Py_BEGIN_ALLOW_THREADS
-	fputs("<NA>", fp);
+  PyObject* repr = NA_repr(self);
+	fputs(PyString_AsString(repr), fp);
+  Py_DECREF(repr);
 	Py_END_ALLOW_THREADS
 	return 0;
 }
 
-static PyObject *NA_str = NULL;
 
-static PyObject *
-NA_repr(SlopNAObject *self)
-{
-  PyObject *s;
-  s = NA_str ? NA_str : (NA_str = PyString_InternFromString("<NA>"));
-  Py_XINCREF(s);
-  return s;
-}
+
 
 // initialize with the 3 arguments of sys.exc_info():
 //   (exception type, exception value, traceback object)
@@ -49,7 +62,18 @@ NA_init(SlopNAObject *self, PyObject *args, PyObject *kwds)
   self->exc_value     = PyTuple_GET_ITEM(args, 1);
   self->exc_traceback = PyTuple_GET_ITEM(args, 2);
 
+  Py_INCREF(self->exc_type);
+  Py_INCREF(self->exc_value);
+  Py_INCREF(self->exc_traceback);
+
   return 0;
+}
+
+static void
+NA_dealloc(SlopNAObject *self) {
+  Py_XDECREF(self->exc_type);
+  Py_XDECREF(self->exc_value);
+  Py_XDECREF(self->exc_traceback);
 }
 
 
@@ -80,6 +104,25 @@ NA_xor(PyObject *a, PyObject *b)
 		return PyInt_Type.tp_as_number->nb_xor(a, b);
 	return PyBool_FromLong(
 		((PyBoolObject *)a)->ob_ival ^ ((PyBoolObject *)b)->ob_ival);
+}
+
+
+PyObject* SlopNA_New(PyObject* exc_type, PyObject* exc_value, PyObject* exc_traceback) {
+  // TODO: use a free list like intobject and friends
+  SlopNAObject* self = (SlopNAObject*)PyObject_MALLOC(sizeof(SlopNAObject));
+  if (self == NULL)
+    return (PyObject *)PyErr_NoMemory();
+	PyObject_INIT(self, &SlopNA_Type);
+
+  self->exc_type = exc_type;
+  self->exc_value = exc_value;
+  self->exc_traceback = exc_traceback;
+
+  Py_INCREF(self->exc_type);
+  Py_INCREF(self->exc_value);
+  Py_INCREF(self->exc_traceback);
+
+	return (PyObject*)self;
 }
 
 
@@ -135,7 +178,7 @@ PyTypeObject SlopNA_Type = {
 	"NA",
 	sizeof(SlopNAObject),
 	0,
-	0,					/* tp_dealloc */
+	(destructor)NA_dealloc,		/* tp_dealloc */
 	(printfunc)NA_print,			/* tp_print */
 	0,					/* tp_getattr */
 	0,					/* tp_setattr */

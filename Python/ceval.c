@@ -2605,12 +2605,13 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
       // only handle certain exception types specially
       if ((p_type == PyExc_ZeroDivisionError) ||
           (p_type == PyExc_TypeError)) {
-        //PyErr_Print();
+        PyObject *exc, *val, *tb;
+        PyErr_Fetch(&exc, &val, &tb);
         PyErr_Clear();
         why = WHY_NOT;
-        PyObject* tmp = PyString_FromString("<NA>");
-        x = tmp; // x is the 'result'
-        SET_TOP(tmp); // clobber top of stack with it (TODO: is this always correct?)
+        // x is the 'result'
+        x = SlopNA_New(exc, val, tb);
+        SET_TOP(x); // clobber top of stack with it (TODO: is this always correct?)
       }
     }
 

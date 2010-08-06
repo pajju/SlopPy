@@ -33,7 +33,9 @@ typedef struct {
 PyAPI_DATA(PyTypeObject) SlopNA_Type;
 #define SlopNA_CheckExact(op) ((op)->ob_type == &SlopNA_Type)
 
-PyAPI_FUNC(PyObject *) SlopNA_New(void);
+PyAPI_FUNC(PyObject *) SlopNA_New(PyObject* exc_type,
+                                  PyObject* exc_value,
+                                  PyObject* exc_traceback);
 
 
 #ifdef __cplusplus
