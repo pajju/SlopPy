@@ -898,6 +898,17 @@ binary_op1(PyObject *v, PyObject *w, const int op_slot)
 	binaryfunc slotv = NULL;
 	binaryfunc slotw = NULL;
 
+  // pgbovine - if v is NA, return v; if w is NA, return w
+  if (SlopNA_CheckExact(v)) {
+    Py_INCREF(v);
+    return v;
+  }
+  else if (SlopNA_CheckExact(w)) {
+    Py_INCREF(w);
+    return w;
+  }
+
+
 	if (v->ob_type->tp_as_number != NULL && NEW_STYLE_NUMBER(v))
 		slotv = NB_BINOP(v->ob_type->tp_as_number, op_slot);
 	if (w->ob_type != v->ob_type &&

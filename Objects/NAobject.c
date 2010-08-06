@@ -44,8 +44,6 @@ NA_print(SlopNAObject *self, FILE *fp, int flags)
 }
 
 
-
-
 // initialize with the 3 arguments of sys.exc_info():
 //   (exception type, exception value, traceback object)
 static int
@@ -76,37 +74,6 @@ NA_dealloc(SlopNAObject *self) {
   Py_XDECREF(self->exc_traceback);
 }
 
-
-/* Arithmetic operations redefined to return bool if both args are bool. */
-
-static PyObject *
-NA_and(PyObject *a, PyObject *b)
-{
-	if (!PyBool_Check(a) || !PyBool_Check(b))
-		return PyInt_Type.tp_as_number->nb_and(a, b);
-	return PyBool_FromLong(
-		((PyBoolObject *)a)->ob_ival & ((PyBoolObject *)b)->ob_ival);
-}
-
-static PyObject *
-NA_or(PyObject *a, PyObject *b)
-{
-	if (!PyBool_Check(a) || !PyBool_Check(b))
-		return PyInt_Type.tp_as_number->nb_or(a, b);
-	return PyBool_FromLong(
-		((PyBoolObject *)a)->ob_ival | ((PyBoolObject *)b)->ob_ival);
-}
-
-static PyObject *
-NA_xor(PyObject *a, PyObject *b)
-{
-	if (!PyBool_Check(a) || !PyBool_Check(b))
-		return PyInt_Type.tp_as_number->nb_xor(a, b);
-	return PyBool_FromLong(
-		((PyBoolObject *)a)->ob_ival ^ ((PyBoolObject *)b)->ob_ival);
-}
-
-
 PyObject* SlopNA_New(PyObject* exc_type, PyObject* exc_value, PyObject* exc_traceback) {
   // TODO: use a free list like intobject and friends
   SlopNAObject* self = (SlopNAObject*)PyObject_MALLOC(sizeof(SlopNAObject));
@@ -129,47 +96,52 @@ PyObject* SlopNA_New(PyObject* exc_type, PyObject* exc_value, PyObject* exc_trac
 /* Doc string */
 PyDoc_STRVAR(NA_doc, "Special NA type for SlopPy");
 
+PyObject* NA_unary(PyObject* obj) {
+  assert(SlopNA_CheckExact(obj));
+  Py_INCREF(obj);
+  return obj;
+}
 
-/* Arithmetic methods -- only so we can override &, |, ^. */
+/* Arithmetic methods -- so we can override unary operators */
 static PyNumberMethods NA_as_number = {
-	0,			/* nb_add */
-	0,			/* nb_subtract */
-	0,			/* nb_multiply */
-	0,			/* nb_divide */
-	0,			/* nb_remainder */
-	0,			/* nb_divmod */
-	0,			/* nb_power */
-	0,			/* nb_negative */
-	0,			/* nb_positive */
-	0,			/* nb_absolute */
-	0,			/* nb_nonzero */
-	0,			/* nb_invert */
-	0,			/* nb_lshift */
-	0,			/* nb_rshift */
-	NA_and,		/* nb_and */
-	NA_xor,		/* nb_xor */
-	NA_or,		/* nb_or */
-	0,			/* nb_coerce */
-	0,			/* nb_int */
-	0,			/* nb_long */
-	0,			/* nb_float */
-	0,			/* nb_oct */
-	0,		 	/* nb_hex */
-	0,			/* nb_inplace_add */
-	0,			/* nb_inplace_subtract */
-	0,			/* nb_inplace_multiply */
-	0,			/* nb_inplace_divide */
-	0,			/* nb_inplace_remainder */
-	0,			/* nb_inplace_power */
-	0,			/* nb_inplace_lshift */
-	0,			/* nb_inplace_rshift */
-	0,			/* nb_inplace_and */
-	0,			/* nb_inplace_xor */
-	0,			/* nb_inplace_or */
-	0,			/* nb_floor_divide */
-	0,			/* nb_true_divide */
-	0,			/* nb_inplace_floor_divide */
-	0,			/* nb_inplace_true_divide */
+  0,/* nb_add */
+  0,/* nb_subtract */
+  0,/* nb_multiply */
+  0,/* nb_divide */
+  0,/* nb_remainder */
+  0,/* nb_divmod */
+  0,/* nb_power */
+  NA_unary,/* nb_negative */
+  NA_unary,/* nb_positive */
+  NA_unary,/* nb_absolute */
+  0,/* nb_nonzero */
+  NA_unary,/* nb_invert */
+  0,/* nb_lshift */
+  0,/* nb_rshift */
+  0,/* nb_and */
+  0,/* nb_xor */
+  0,/* nb_or */
+  0,/* nb_coerce */
+  0,/* nb_int */
+  0,/* nb_long */
+  0,/* nb_float */
+  0,/* nb_oct */
+  0,/* nb_hex */
+  0,/* nb_inplace_add */
+  0,/* nb_inplace_subtract */
+  0,/* nb_inplace_multiply */
+  0,/* nb_inplace_divide */
+  0,/* nb_inplace_remainder */
+  0,/* nb_inplace_power */
+  0,/* nb_inplace_lshift */
+  0,/* nb_inplace_rshift */
+  0,/* nb_inplace_and */
+  0,/* nb_inplace_xor */
+  0,/* nb_inplace_or */
+  0,/* nb_floor_divide */
+  0,/* nb_true_divide */
+  0,/* nb_inplace_floor_divide */
+  0,/* nb_inplace_true_divide */
 };
 
 
