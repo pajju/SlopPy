@@ -513,6 +513,9 @@ Py_Main(int argc, char **argv)
 
 	if (Py_VerboseFlag ||
 	    (command == NULL && filename == NULL && module == NULL && stdin_is_interactive)) {
+    // pgbovine - add custom start-up banner
+    fprintf(stderr, "SlopPy: A Python interpreter that facilitates sloppy, error-tolerant data analysis\nCreated by Philip Guo (pg@cs.stanford.edu)\n\n");
+
 		fprintf(stderr, "Python %s on %s\n",
 			Py_GetVersion(), Py_GetPlatform());
  		if (!Py_NoSiteFlag)

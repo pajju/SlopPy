@@ -248,6 +248,7 @@ ASDLGEN=	$(srcdir)/Parser/asdl_c.py
 
 ##########################################################################
 # Python
+#   pgbovine - added slop*.o
 PYTHON_OBJS=	\
 		Python/_warnings.o \
 		Python/Python-ast.o \
@@ -255,6 +256,7 @@ PYTHON_OBJS=	\
 		Python/ast.o \
 		Python/bltinmodule.o \
 		Python/ceval.o \
+		Python/slop.o \
 		Python/compile.o \
 		Python/codecs.o \
 		Python/errors.o \
@@ -579,6 +581,7 @@ Python/formatter_string.o: $(srcdir)/Python/formatter_string.c \
 
 ############################################################################
 # Header files
+#   pgbovine - added slop*.h
 
 PYTHON_HEADERS= \
 		Include/Python-ast.h \
@@ -594,6 +597,7 @@ PYTHON_HEADERS= \
 		Include/bufferobject.h \
 		Include/cellobject.h \
 		Include/ceval.h \
+		Include/slop.h \
 		Include/classobject.h \
 		Include/cobject.h \
 		Include/code.h \
