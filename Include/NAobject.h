@@ -23,11 +23,17 @@ extern "C" {
 
 typedef struct {
   PyObject_HEAD
+  // same as those returned by sys.exc_info()
+  PyObject *exc_type;
+  PyObject *exc_value;
+  PyObject *exc_traceback;
 } SlopNAObject;
 
 
 PyAPI_DATA(PyTypeObject) SlopNA_Type;
 #define SlopNA_CheckExact(op) ((op)->ob_type == &SlopNA_Type)
+
+PyAPI_FUNC(PyObject *) SlopNA_New(void);
 
 
 #ifdef __cplusplus

@@ -11,6 +11,7 @@
 */
 
 #include "NAobject.h"
+#include "slop.h"
 
 static int
 NA_print(SlopNAObject *self, FILE *fp, int flags)
@@ -26,16 +27,29 @@ static PyObject *NA_str = NULL;
 static PyObject *
 NA_repr(SlopNAObject *self)
 {
-	PyObject *s;
+  PyObject *s;
   s = NA_str ? NA_str : (NA_str = PyString_InternFromString("<NA>"));
-	Py_XINCREF(s);
-	return s;
+  Py_XINCREF(s);
+  return s;
 }
 
-static PyObject *
-NA_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+// initialize with the 3 arguments of sys.exc_info():
+//   (exception type, exception value, traceback object)
+static int
+NA_init(SlopNAObject *self, PyObject *args, PyObject *kwds)
 {
-	return PyString_FromString("<NA stint>");
+  assert(PyTuple_CheckExact(args));
+
+  if (PyTuple_Size(args) != 3) {
+		PyErr_SetString(PyExc_ValueError, "NA object takes exactly 3 args (those produced by sys.exc_info)");
+    return -1;
+  }
+
+  self->exc_type      = PyTuple_GET_ITEM(args, 0);
+  self->exc_value     = PyTuple_GET_ITEM(args, 1);
+  self->exc_traceback = PyTuple_GET_ITEM(args, 2);
+
+  return 0;
 }
 
 
@@ -67,6 +81,7 @@ NA_xor(PyObject *a, PyObject *b)
 	return PyBool_FromLong(
 		((PyBoolObject *)a)->ob_ival ^ ((PyBoolObject *)b)->ob_ival);
 }
+
 
 /* Doc string */
 PyDoc_STRVAR(NA_doc, "Special NA type for SlopPy");
@@ -129,13 +144,13 @@ PyTypeObject SlopNA_Type = {
 	&NA_as_number,			/* tp_as_number */
 	0,					/* tp_as_sequence */
 	0,					/* tp_as_mapping */
-	0,					/* tp_hash */
+	(hashfunc)PyObject_HashNotImplemented, /* tp_hash */
   0,					/* tp_call */
   (reprfunc)NA_repr,			/* tp_str */
 	0,					/* tp_getattro */
 	0,					/* tp_setattro */
 	0,					/* tp_as_buffer */
-	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+	Py_TPFLAGS_DEFAULT, /* tp_flags */
 	NA_doc,			/* tp_doc */
 	0,					/* tp_traverse */
 	0,					/* tp_clear */
@@ -151,9 +166,9 @@ PyTypeObject SlopNA_Type = {
 	0,					/* tp_descr_get */
 	0,					/* tp_descr_set */
 	0,					/* tp_dictoffset */
-	0,					/* tp_init */
+	(initproc)NA_init,		/* tp_init */
 	0,					/* tp_alloc */
-	NA_new,		/* tp_new */
+	PyType_GenericNew,		/* tp_new */
 	0,      		/* tp_free */
 };
 
