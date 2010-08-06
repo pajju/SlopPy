@@ -299,6 +299,7 @@ PYTHON_OBJS=	\
 
 ##########################################################################
 # Objects
+#   pgbovine - added NAobject.o
 OBJECT_OBJS=	\
 		Objects/abstract.o \
 		Objects/boolobject.o \
@@ -335,6 +336,7 @@ OBJECT_OBJS=	\
 		Objects/tupleobject.o \
 		Objects/typeobject.o \
 		Objects/weakrefobject.o \
+		Objects/NAobject.o \
 		$(UNICODE_OBJS)
 
 
@@ -581,7 +583,7 @@ Python/formatter_string.o: $(srcdir)/Python/formatter_string.c \
 
 ############################################################################
 # Header files
-#   pgbovine - added slop*.h
+#   pgbovine - added slop*.h and NAobject.h
 
 PYTHON_HEADERS= \
 		Include/Python-ast.h \
@@ -598,6 +600,7 @@ PYTHON_HEADERS= \
 		Include/cellobject.h \
 		Include/ceval.h \
 		Include/slop.h \
+		Include/NAobject.h \
 		Include/classobject.h \
 		Include/cobject.h \
 		Include/code.h \

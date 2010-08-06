@@ -84,6 +84,7 @@
 
 #include "unicodeobject.h"
 #include "intobject.h"
+#include "NAobject.h" // pgbovine
 #include "boolobject.h"
 #include "longobject.h"
 #include "floatobject.h"

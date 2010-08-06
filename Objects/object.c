@@ -2151,6 +2151,10 @@ _Py_ReadyTypes(void)
 
 	if (PyType_Ready(&PyMemberDescr_Type) < 0)
 		Py_FatalError("Can't initialize member descriptor type");
+
+  // pgbovine - add NA type
+  if (PyType_Ready(&SlopNA_Type) < 0)
+    Py_FatalError("Can't initialize SlopPy NA type");
 }
 
 

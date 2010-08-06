@@ -2656,6 +2656,7 @@ _PyBuiltin_Init(void)
 	SETBUILTIN("tuple",		&PyTuple_Type);
 	SETBUILTIN("type",		&PyType_Type);
 	SETBUILTIN("xrange",		&PyRange_Type);
+	SETBUILTIN("NA",		&SlopNA_Type); // pgbovine
 #ifdef Py_USING_UNICODE
 	SETBUILTIN("unicode",		&PyUnicode_Type);
 #endif
