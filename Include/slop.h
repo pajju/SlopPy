@@ -23,6 +23,7 @@ extern "C" {
 // function on stack?)
 int transitively_within_try_block(void);
 
+
 #ifdef __cplusplus
 }
 #endif

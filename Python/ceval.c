@@ -2637,8 +2637,11 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
           // we've done 1 more than necessary, since SlopNA_New already does a Py_INCREF
           Py_DECREF(x);
         }
+        else if (opcode == LOAD_GLOBAL || opcode == LOAD_FAST || opcode == LOAD_NAME) {
+          PUSH(x);
+        }
         else {
-          SET_TOP(x); // clobber top of stack with it (TODO: is this always correct?)
+          SET_TOP(x); // clobber top of stack with it (TODO: is this always correct? NO)
         }
       }
     }
