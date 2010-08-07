@@ -96,11 +96,97 @@ PyObject* SlopNA_New(PyObject* exc_type, PyObject* exc_value, PyObject* exc_trac
 /* Doc string */
 PyDoc_STRVAR(NA_doc, "Special NA type for SlopPy");
 
-PyObject* NA_unary(PyObject* obj) {
-  assert(SlopNA_CheckExact(obj));
-  Py_INCREF(obj);
-  return obj;
+
+static SlopNAObject* alias(SlopNAObject* self) {
+  Py_INCREF(self);
+  return self;
 }
+
+static PyObject* NA_unary(PyObject* self) {
+  assert(SlopNA_CheckExact(self));
+  return (PyObject*)alias((SlopNAObject*)self);
+}
+
+static PyObject* NA_GetAttr(PyObject* self, PyObject* name) {
+  // TODO: create a derived object and link it back to self to track 'lineage'
+  return NA_unary(self);
+}
+
+static PyObject* NA_SetAttr(PyObject* self, PyObject* name, PyObject* value) {
+  return 0; // NOP - 0 stands for no error
+}
+
+static PyObject* NA_item(SlopNAObject* self, Py_ssize_t i) {
+  // TODO: create a derived object and link it back to self to track 'lineage'
+  return (PyObject*)alias(self);
+}
+
+static int NA_ass_item(SlopNAObject *a, Py_ssize_t i, PyObject *v) {
+  return 0; // NOP - 0 stands for no error
+}
+
+
+static PyObject* NA_slice(SlopNAObject* self, Py_ssize_t ilow, Py_ssize_t ihigh) {
+  return (PyObject*)alias(self);
+}
+
+static Py_ssize_t NA_length(SlopNAObject* self) {
+  return 1;
+}
+
+static PyObject* NA_concat(SlopNAObject *a, PyObject *bb) {
+  return (PyObject*)alias(a);
+}
+
+static PyObject* NA_repeat(SlopNAObject *a, Py_ssize_t n) {
+  return (PyObject*)alias(a);
+}
+
+static int NA_ass_slice(SlopNAObject *a, Py_ssize_t ilow, Py_ssize_t ihigh, PyObject *v) {
+  return 0; // NOP - 0 stands for no error
+}
+
+static int NA_contains(SlopNAObject *a, PyObject *el) {
+  return 0; // always return False
+}
+
+static PyObject* NA_inplace_concat(PyListObject *self, PyObject *other) {
+  return (PyObject*)self;
+}
+
+static PyObject* NA_inplace_repeat(SlopNAObject *self, Py_ssize_t n) {
+  return (PyObject*)self;
+}
+
+
+static PySequenceMethods NA_as_sequence = {
+	(lenfunc)NA_length,                 /* sq_length */
+	(binaryfunc)NA_concat,              /* sq_concat */
+	(ssizeargfunc)NA_repeat,            /* sq_repeat */
+	(ssizeargfunc)NA_item,              /* sq_item */
+	(ssizessizeargfunc)NA_slice,        /* sq_slice */
+	(ssizeobjargproc)NA_ass_item,       /* sq_ass_item */
+	(ssizessizeobjargproc)NA_ass_slice, /* sq_ass_slice */
+	(objobjproc)NA_contains,            /* sq_contains */
+	(binaryfunc)NA_inplace_concat,      /* sq_inplace_concat */
+	(ssizeargfunc)NA_inplace_repeat,    /* sq_inplace_repeat */
+};
+
+
+static PyObject* NA_subscript(SlopNAObject* self, PyObject* item) {
+  return (PyObject*)alias(self);
+}
+
+static int NA_ass_subscript(SlopNAObject* self, PyObject* item, PyObject* value) {
+  return 0; // NOP - 0 stands for no error
+}
+
+static PyMappingMethods NA_as_mapping = {
+	(lenfunc)NA_length,
+	(binaryfunc)NA_subscript,
+	(objobjargproc)NA_ass_subscript,
+};
+
 
 /* Arithmetic methods -- so we can override unary operators */
 static PyNumberMethods NA_as_number = {
@@ -152,13 +238,13 @@ PyTypeObject SlopNA_Type = {
 	0,
 	(destructor)NA_dealloc,		/* tp_dealloc */
 	(printfunc)NA_print,			/* tp_print */
-	0,					/* tp_getattr */
-	0,					/* tp_setattr */
+	(getattrfunc)NA_GetAttr,  /* tp_getattr */
+	(setattrfunc)NA_SetAttr,  /* tp_setattr */
 	0,					/* tp_compare */
-	(reprfunc)NA_repr,			/* tp_repr */
-	&NA_as_number,			/* tp_as_number */
-	0,					/* tp_as_sequence */
-	0,					/* tp_as_mapping */
+	(reprfunc)NA_repr,  /* tp_repr */
+	&NA_as_number,      /* tp_as_number */
+	&NA_as_sequence,    /* tp_as_sequence */
+	&NA_as_mapping,     /* tp_as_mapping */
 	(hashfunc)PyObject_HashNotImplemented, /* tp_hash */
   0,					/* tp_call */
   (reprfunc)NA_repr,			/* tp_str */

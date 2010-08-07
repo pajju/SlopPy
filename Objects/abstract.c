@@ -898,6 +898,7 @@ binary_op1(PyObject *v, PyObject *w, const int op_slot)
 	binaryfunc slotv = NULL;
 	binaryfunc slotw = NULL;
 
+
   // pgbovine - if v is NA, return v; if w is NA, return w
   if (SlopNA_CheckExact(v)) {
     Py_INCREF(v);
@@ -1026,6 +1027,22 @@ ternary_op(PyObject *v,
 	ternaryfunc slotv = NULL;
 	ternaryfunc slotw = NULL;
 	ternaryfunc slotz = NULL;
+
+
+  // pgbovine - if v is NA, return v; if w is NA, return w; if z is NA, return z
+  if (SlopNA_CheckExact(v)) {
+    Py_INCREF(v);
+    return v;
+  }
+  else if (SlopNA_CheckExact(w)) {
+    Py_INCREF(w);
+    return w;
+  }
+  else if (SlopNA_CheckExact(z)) {
+    Py_INCREF(z);
+    return z;
+  }
+
 
 	mv = v->ob_type->tp_as_number;
 	mw = w->ob_type->tp_as_number;
