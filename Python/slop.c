@@ -328,3 +328,35 @@ static int bytecode_stack_effects[][2] = {
   {-1, -1}, //#define EXTENDED_ARG  143
 };
 
+
+// see Include/slop.h for meanings of return values
+int get_NA_stack_action(int opcode) {
+  int num_elts_popped = bytecode_stack_effects[opcode][0];
+  int num_elts_pushed = bytecode_stack_effects[opcode][1];
+
+  if (num_elts_popped < 0 && num_elts_pushed < 0) {
+    fprintf(stderr, "problematic opcode: %d\n", opcode);
+    Py_FatalError("invalid opcode in get_NA_stack_action()");
+  }
+
+  // choose actions based on these 'rules' that I reverse-engineered:
+  if (num_elts_pushed == 0) {
+    return DO_NOTHING;
+  }
+
+  if (num_elts_popped >= num_elts_pushed) {
+    if (num_elts_pushed == 1) {
+      return DO_SET_TOP_1;
+    }
+  }
+  else {
+    if (num_elts_pushed == 1) {
+      return DO_PUSH_1;
+    }
+  }
+
+  fprintf(stderr, "problematic opcode: %d\n", opcode);
+  Py_FatalError("unreachable code in get_NA_stack_action()");
+  return NEED_SPECIAL_HANDLING;
+}
+

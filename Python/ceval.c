@@ -2627,7 +2627,7 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
         // x is the 'result'
         x = SlopNA_New(exc, val, tb);
 
-        // special handling for certain opcodes
+        // now figure out what to do with x on the stack ...
         if (opcode == UNPACK_SEQUENCE) {
           int i;
           for (i = 0; i < oparg; i++) {
@@ -2637,11 +2637,31 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
           // we've done 1 more than necessary, since SlopNA_New already does a Py_INCREF
           Py_DECREF(x);
         }
-        else if (opcode == LOAD_GLOBAL || opcode == LOAD_FAST || opcode == LOAD_NAME) {
+        else if (opcode == BUILD_TUPLE ||
+                 opcode == BUILD_LIST) {
           PUSH(x);
         }
+        else if (opcode == BUILD_SLICE ||
+                 opcode == CALL_FUNCTION ||
+                 opcode == CALL_FUNCTION_VAR ||
+                 opcode == CALL_FUNCTION_KW ||
+                 opcode == CALL_FUNCTION_VAR_KW) {
+          SET_TOP(x);
+        }
         else {
-          SET_TOP(x); // clobber top of stack with it (TODO: is this always correct? NO)
+          int action = get_NA_stack_action(opcode);
+          if (action == DO_PUSH_1) {
+            PUSH(x);
+          }
+          else if (action == DO_SET_TOP_1) {
+            SET_TOP(x);
+          }
+          else if (action == DO_NOTHING) {
+            // NOP
+          }
+          else {
+            Py_FatalError("whoops, case unhandled by get_NA_stack_action()!");
+          }
         }
       }
     }

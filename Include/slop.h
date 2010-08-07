@@ -24,6 +24,12 @@ extern "C" {
 int transitively_within_try_block(void);
 
 
+#define DO_NOTHING             100
+#define DO_PUSH_1              101
+#define DO_SET_TOP_1           102
+#define NEED_SPECIAL_HANDLING  103
+int get_NA_stack_action(int opcode);
+
 #ifdef __cplusplus
 }
 #endif
