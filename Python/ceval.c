@@ -2626,7 +2626,20 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
         why = WHY_NOT;
         // x is the 'result'
         x = SlopNA_New(exc, val, tb);
-        SET_TOP(x); // clobber top of stack with it (TODO: is this always correct?)
+
+        // special handling for certain opcodes
+        if (opcode == UNPACK_SEQUENCE) {
+          int i;
+          for (i = 0; i < oparg; i++) {
+            Py_INCREF(x);
+            PUSH(x);
+          }
+          // we've done 1 more than necessary, since SlopNA_New already does a Py_INCREF
+          Py_DECREF(x);
+        }
+        else {
+          SET_TOP(x); // clobber top of stack with it (TODO: is this always correct?)
+        }
       }
     }
 

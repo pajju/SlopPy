@@ -188,6 +188,11 @@ static PyMappingMethods NA_as_mapping = {
 };
 
 
+static PyObject* NA_call(SlopNAObject *self, PyObject *args, PyObject *kwds) {
+  return (PyObject*)alias(self);
+}
+
+
 /* Arithmetic methods -- so we can override unary operators */
 static PyNumberMethods NA_as_number = {
   0,/* nb_add */
@@ -246,7 +251,7 @@ PyTypeObject SlopNA_Type = {
   &NA_as_sequence,    /* tp_as_sequence */
   &NA_as_mapping,     /* tp_as_mapping */
   (hashfunc)PyObject_HashNotImplemented, /* tp_hash */
-  0,					/* tp_call */
+  (ternaryfunc)NA_call,					/* tp_call */
   (reprfunc)NA_repr,			/* tp_str */
   0,					/* tp_getattro */
   0,					/* tp_setattro */
