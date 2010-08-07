@@ -164,6 +164,7 @@ def getse(op, arg=None):
 // {# elts popped off of stack, # elts pushed onto stack}
 //
 // {-1, -1} value means "invalid opcode"
+// {-2, -2} value means "opcode that isn't likely gonna come up in an exception"
 // {-999, -999} value means "variable stack effect depending on args"
 static int bytecode_stack_effects[][2] = {
   // bytecode numbers from Include/opcode.h
@@ -251,15 +252,15 @@ static int bytecode_stack_effects[][2] = {
   {2, 1}, //#define INPLACE_AND	77
   {2, 1}, //#define INPLACE_XOR	78
   {2, 1}, //#define INPLACE_OR	79
-//#define BREAK_LOOP	80
-//#define WITH_CLEANUP    81
+  {-2, -2}, //#define BREAK_LOOP	80
+  {-2, -2}, //#define WITH_CLEANUP    81
   {0, 1}, //#define LOAD_LOCALS	82
-//#define RETURN_VALUE	83
+  {-2, -2}, //#define RETURN_VALUE	83
   {1, 0}, //#define IMPORT_STAR	84
   {3, 0}, //#define EXEC_STMT	85
   {1, 1}, //#define YIELD_VALUE	86 (TODO: uncertaina about this one)
-//#define POP_BLOCK	87
-//#define END_FINALLY	88
+  {-2, -2}, //#define POP_BLOCK	87
+  {-2, -2}, //#define END_FINALLY	88
   {3, 1}, //#define BUILD_CLASS	89
 
 //#define HAVE_ARGUMENT	90	/* Opcodes from here have an argument: */
@@ -267,7 +268,7 @@ static int bytecode_stack_effects[][2] = {
   {1, 0}, //#define STORE_NAME	90	/* Index in name list */
   {0, 0}, //#define DELETE_NAME	91	/* "" */
   {-999, -999}, //#define UNPACK_SEQUENCE	92	/* Number of sequence items */
-//#define FOR_ITER	93
+  {-2, -2}, //#define FOR_ITER	93
   {-1, -1}, // 94
   {2, 0}, //#define STORE_ATTR	95	/* Index in name list */
   {1, 0}, //#define DELETE_ATTR	96	/* "" */
@@ -284,19 +285,19 @@ static int bytecode_stack_effects[][2] = {
   {1, 1}, //#define IMPORT_NAME	107	/* Index in name list */
   {1, 2}, //#define IMPORT_FROM	108	/* Index in name list */
   {-1, -1}, // 109
-//#define JUMP_FORWARD	110	/* Number of bytes to skip */
-//#define JUMP_IF_FALSE	111	/* "" */
-//#define JUMP_IF_TRUE	112	/* "" */
-//#define JUMP_ABSOLUTE	113	/* Target byte offset from beginning of code */
+  {-2, -2}, //#define JUMP_FORWARD	110	/* Number of bytes to skip */
+  {-2, -2}, //#define JUMP_IF_FALSE	111	/* "" */
+  {-2, -2}, //#define JUMP_IF_TRUE	112	/* "" */
+  {-2, -2}, //#define JUMP_ABSOLUTE	113	/* Target byte offset from beginning of code */
   {-1, -1}, // 114
   {-1, -1}, // 115
   {0, 1}, //#define LOAD_GLOBAL	116	/* Index in name list */
   {-1, -1}, // 117
   {-1, -1}, // 118
-//#define CONTINUE_LOOP	119	/* Start of loop (absolute) */
-//#define SETUP_LOOP	120	/* Target address (relative) */
-//#define SETUP_EXCEPT	121	/* "" */
-//#define SETUP_FINALLY	122	/* "" */
+  {-2, -2}, //#define CONTINUE_LOOP	119	/* Start of loop (absolute) */
+  {-2, -2}, //#define SETUP_LOOP	120	/* Target address (relative) */
+  {-2, -2}, //#define SETUP_EXCEPT	121	/* "" */
+  {-2, -2}, //#define SETUP_FINALLY	122	/* "" */
   {-1, -1}, // 123
   {0, 1}, //#define LOAD_FAST	124	/* Local variable number */
   {1, 0}, //#define STORE_FAST	125	/* Local variable number */
