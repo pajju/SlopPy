@@ -2610,6 +2610,7 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
       // occur during normal execution
       if (!((p_type == PyExc_StopIteration) ||
             (p_type == PyExc_GeneratorExit) ||
+            (p_type == PyExc_AssertionError) ||
             (p_type == PyExc_Warning) ||
             (p_type == PyExc_UserWarning) ||
             (p_type == PyExc_DeprecationWarning) ||
@@ -2637,10 +2638,13 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
           // we've done 1 more than necessary, since SlopNA_New already does a Py_INCREF
           Py_DECREF(x);
         }
+        // these opcodes only PUSH(x) on success
         else if (opcode == BUILD_TUPLE ||
                  opcode == BUILD_LIST) {
           PUSH(x);
         }
+        // these opcodes do an unconditional PUSH(x), so if there's an
+        // error, then clobber it with a SET_TOP
         else if (opcode == BUILD_SLICE ||
                  opcode == CALL_FUNCTION ||
                  opcode == CALL_FUNCTION_VAR ||
