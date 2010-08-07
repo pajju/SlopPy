@@ -232,44 +232,44 @@ static PyNumberMethods NA_as_number = {
 
 
 PyTypeObject SlopNA_Type = {
-	PyVarObject_HEAD_INIT(&PyType_Type, 0)
-	"NA",
-	sizeof(SlopNAObject),
-	0,
-	(destructor)NA_dealloc,		/* tp_dealloc */
-	(printfunc)NA_print,			/* tp_print */
-	(getattrfunc)NA_GetAttr,  /* tp_getattr */
-	(setattrfunc)NA_SetAttr,  /* tp_setattr */
-	0,					/* tp_compare */
-	(reprfunc)NA_repr,  /* tp_repr */
-	&NA_as_number,      /* tp_as_number */
-	&NA_as_sequence,    /* tp_as_sequence */
-	&NA_as_mapping,     /* tp_as_mapping */
-	(hashfunc)PyObject_HashNotImplemented, /* tp_hash */
+  PyVarObject_HEAD_INIT(&PyType_Type, 0)
+  "NA",
+  sizeof(SlopNAObject),
+  0,
+  (destructor)NA_dealloc,		/* tp_dealloc */
+  (printfunc)NA_print,			/* tp_print */
+  (getattrfunc)NA_GetAttr,  /* tp_getattr */
+  (setattrfunc)NA_SetAttr,  /* tp_setattr */
+  0,					/* tp_compare */
+  (reprfunc)NA_repr,  /* tp_repr */
+  &NA_as_number,      /* tp_as_number */
+  &NA_as_sequence,    /* tp_as_sequence */
+  &NA_as_mapping,     /* tp_as_mapping */
+  (hashfunc)PyObject_HashNotImplemented, /* tp_hash */
   0,					/* tp_call */
   (reprfunc)NA_repr,			/* tp_str */
-	0,					/* tp_getattro */
-	0,					/* tp_setattro */
-	0,					/* tp_as_buffer */
-	Py_TPFLAGS_DEFAULT, /* tp_flags */
-	NA_doc,			/* tp_doc */
-	0,					/* tp_traverse */
-	0,					/* tp_clear */
-	0,					/* tp_richcompare */
-	0,					/* tp_weaklistoffset */
-	0,					/* tp_iter */
-	0,					/* tp_iternext */
-	0,					/* tp_methods */
-	0,					/* tp_members */
-	0,					/* tp_getset */
-	0,          /* tp_base */
-	0,					/* tp_dict */
-	0,					/* tp_descr_get */
-	0,					/* tp_descr_set */
-	0,					/* tp_dictoffset */
-	(initproc)NA_init,		/* tp_init */
-	0,					/* tp_alloc */
-	PyType_GenericNew,		/* tp_new */
-	0,      		/* tp_free */
+  0,					/* tp_getattro */
+  0,					/* tp_setattro */
+  0,					/* tp_as_buffer */
+  Py_TPFLAGS_DEFAULT, /* tp_flags */
+  NA_doc,			/* tp_doc */
+  0,					/* tp_traverse */
+  0,					/* tp_clear */
+  0,					/* tp_richcompare */
+  0,					/* tp_weaklistoffset */
+  0,					/* tp_iter */
+  0,					/* tp_iternext */
+  0,					/* tp_methods */
+  0,					/* tp_members */
+  0,					/* tp_getset */
+  0,          /* tp_base */
+  0,					/* tp_dict */
+  0,					/* tp_descr_get */
+  0,					/* tp_descr_set */
+  0,					/* tp_dictoffset */
+  (initproc)NA_init,		/* tp_init */
+  0,					/* tp_alloc */
+  PyType_GenericNew,		/* tp_new */
+  0,      		/* tp_free */
 };
 

@@ -17,6 +17,8 @@
 #include "opcode.h"
 #include "structmember.h"
 
+#include "slop.h" // pgbovine
+
 #include <ctype.h>
 
 #ifndef WITH_TSC
@@ -2595,16 +2597,29 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
 		if (why == WHY_RERAISE)
 			why = WHY_EXCEPTION;
 
-    // pgbovine - catch certain types of exceptions and assign a special
-    // 'NA' value to them
-    if (why == WHY_EXCEPTION) {
+    // pgbovine - if we're not currently within a 'try' block (even
+    // transitively in a parent function), then all exceptions will go
+    // uncaught, so we will instead silence the exception and replace
+    // it with a special "NA" value
+    if (why == WHY_EXCEPTION && !transitively_within_try_block()) {
       PyThreadState *tstate = PyThreadState_GET();
       PyObject* p_type = tstate->curexc_type;
       //PyObject_Print(p_type, stdout, 0); printf("\n");
 
-      // only handle certain exception types specially
-      if ((p_type == PyExc_ZeroDivisionError) ||
-          (p_type == PyExc_TypeError)) {
+      // ignore certain built-in exception types because they can
+      // occur during normal execution
+      if (!((p_type == PyExc_StopIteration) ||
+            (p_type == PyExc_GeneratorExit) ||
+            (p_type == PyExc_Warning) ||
+            (p_type == PyExc_UserWarning) ||
+            (p_type == PyExc_DeprecationWarning) ||
+            (p_type == PyExc_PendingDeprecationWarning) ||
+            (p_type == PyExc_SyntaxWarning) ||
+            (p_type == PyExc_RuntimeWarning) ||
+            (p_type == PyExc_FutureWarning) ||
+            (p_type == PyExc_ImportWarning) ||
+            (p_type == PyExc_UnicodeWarning) ||
+            (p_type == PyExc_BytesWarning))) {
         PyObject *exc, *val, *tb;
         PyErr_Fetch(&exc, &val, &tb);
         PyErr_Clear();

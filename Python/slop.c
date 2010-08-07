@@ -11,5 +11,25 @@
 */
 
 #include "slop.h"
+#include "frameobject.h"
+#include "opcode.h"
 
+// are we currently within a 'try' block (even transitively for ANY
+// function on stack?)
+int transitively_within_try_block() {
+  PyFrameObject* f = PyEval_GetFrame();
+  while (f) {
+    int i;
+    for (i = 0; i < f->f_iblock; i++) {
+      PyTryBlock* b = &f->f_blockstack[i];
+      if (b->b_type == SETUP_FINALLY || b->b_type == SETUP_EXCEPT) {
+        return 1;
+      }
+    }
+
+    f = f->f_back;
+  }
+
+  return 0;
+}
 

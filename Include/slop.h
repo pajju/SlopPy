@@ -19,6 +19,10 @@ extern "C" {
 #include "Python.h"
 #define PYPRINT(obj) do {PyObject_Print(obj, stdout, 0); printf("\n");} while(0)
 
+// are we currently within a 'try' block (even transitively for ANY
+// function on stack?)
+int transitively_within_try_block(void);
+
 #ifdef __cplusplus
 }
 #endif
