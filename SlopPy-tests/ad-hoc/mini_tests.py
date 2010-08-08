@@ -13,3 +13,5 @@ assert type(z) == NA
 x = 5()
 assert type(x) == NA
 
+y = 5 ** x
+assert type(y) == NA

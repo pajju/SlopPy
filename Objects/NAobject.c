@@ -22,7 +22,7 @@ NA_repr(SlopNAObject *self)
 
   PyObject* repr = PyTuple_Pack(3, type_repr, value_repr, self->exc_traceback_str);
 
-  PyObject* fmt = PyString_FromString("{NA %s %s\n %s\}");
+  PyObject* fmt = PyString_FromString("{NA %s %s\n %s}");
   PyObject* ret = PyString_Format(fmt, repr);
   Py_DECREF(fmt);
 
