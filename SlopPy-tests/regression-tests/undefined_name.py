@@ -1,2 +1,2 @@
-x = 1 / 0
+x = undefined_name
 assert type(x) is NA

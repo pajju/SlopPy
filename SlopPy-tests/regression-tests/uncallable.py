@@ -1,2 +1,3 @@
-x = 1 / 0
+s = 'hello'
+x = s()
 assert type(x) is NA

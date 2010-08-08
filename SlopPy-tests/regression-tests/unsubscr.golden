@@ -1,0 +1,5 @@
+{NA <type 'exceptions.TypeError'> "'int' object is unsubscriptable"
+ Traceback (most recent call last):
+  File "regression-tests/unsubscr.py", line 1, in <module>
+    x = 5[10]
+}

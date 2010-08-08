@@ -1,0 +1,5 @@
+{NA <type 'exceptions.NameError'> "name 'undefined_name' is not defined"
+ Traceback (most recent call last):
+  File "regression-tests/undefined_name.py", line 1, in <module>
+    x = undefined_name
+}

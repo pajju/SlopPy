@@ -1,2 +1,2 @@
-x = 1 / 0
+x = 5[10]
 assert type(x) is NA

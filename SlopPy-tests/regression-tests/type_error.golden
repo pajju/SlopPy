@@ -1,0 +1,5 @@
+{NA <type 'exceptions.TypeError'> "unsupported operand type(s) for +: 'int' and 'str'"
+ Traceback (most recent call last):
+  File "regression-tests/type_error.py", line 1, in <module>
+    x = 5 + 'foo'
+}

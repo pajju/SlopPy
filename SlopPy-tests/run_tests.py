@@ -11,9 +11,11 @@ SLOP_VERBOSE_LOG = 'slop_verbose.log'
 
 ALL_TESTS = [e for e in os.listdir(REGTEST_DIR) if e.endswith('.py')]
 
+# return True if there seemed to be an error in execution
 def execute(test_script):
   assert os.path.isfile(test_script)
-  os.system("%s %s > /dev/null 2> /dev/null" % (SLOPPY_BIN, test_script))
+  retcode = os.system("%s %s > /dev/null 2> /dev/null" % (SLOPPY_BIN, test_script))
+  return retcode != 0
 
 def clobber_golden_file(golden_file):
   print '  Overriding golden file'
@@ -48,7 +50,9 @@ def run_test(test_name, clobber_golden=False):
     os.remove(SLOP_VERBOSE_LOG)
 
   test_script = os.path.join(REGTEST_DIR, test_name)
-  execute(test_script)
+  has_error = execute(test_script)
+  if has_error:
+    print '  exited with non-zero error code'
 
   golden_file = os.path.join(REGTEST_DIR, test_name[:-3] + '.golden')
   if os.path.isfile(golden_file):

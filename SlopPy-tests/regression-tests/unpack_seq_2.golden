@@ -1,0 +1,5 @@
+{NA <type 'exceptions.ValueError'> 'too many values to unpack'
+ Traceback (most recent call last):
+  File "regression-tests/unpack_seq_2.py", line 1, in <module>
+    (x, y) = "hello,world,goodbye".split(',')
+}
