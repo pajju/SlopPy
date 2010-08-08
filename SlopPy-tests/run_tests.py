@@ -80,9 +80,9 @@ if __name__ == "__main__":
   parser.add_option("--test", dest="test_name",
                     help="Run one test")
   parser.add_option("--difftest", dest="diff_test_name",
-                    help="Diff the .out and .golden for one test")
+                    help="Diff against .golden for one test")
   parser.add_option("--diffall", action="store_true", dest="diff_all",
-                    help="Diff the .out and .golden for all tests")
+                    help="Diff against .golden for all tests")
   (options, args) = parser.parse_args()
   if options.run_all:
     if options.clobber:
