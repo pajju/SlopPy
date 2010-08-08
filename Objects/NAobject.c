@@ -205,6 +205,11 @@ static PyObject* NA_call(SlopNAObject *self, PyObject *args, PyObject *kwds) {
   return (PyObject*)alias(self);
 }
 
+// really lame --- always hash to the same thing
+static long NA_hash(SlopNAObject *a) {
+  return 0;
+}
+
 
 /* Arithmetic methods -- so we can override unary operators */
 static PyNumberMethods NA_as_number = {
@@ -263,7 +268,7 @@ PyTypeObject SlopNA_Type = {
   &NA_as_number,      /* tp_as_number */
   &NA_as_sequence,    /* tp_as_sequence */
   &NA_as_mapping,     /* tp_as_mapping */
-  (hashfunc)PyObject_HashNotImplemented, /* tp_hash */
+  (hashfunc)NA_hash, /* tp_hash */
   (ternaryfunc)NA_call,					/* tp_call */
   (reprfunc)NA_repr,			/* tp_str */
   0,					/* tp_getattro */
