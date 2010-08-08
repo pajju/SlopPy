@@ -56,7 +56,8 @@ def run_test(test_name, clobber_golden=False):
 
   golden_file = os.path.join(REGTEST_DIR, test_name[:-3] + '.golden')
   if os.path.isfile(golden_file):
-    diff_test_golden_data(golden_file)
+    if diff_test_golden_data(golden_file):
+      print "  FAILED"
     if clobber_golden:
       clobber_golden_file(golden_file)
   else:
