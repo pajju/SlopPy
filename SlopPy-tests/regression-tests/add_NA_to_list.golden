@@ -1,0 +1,18 @@
+{NA <type 'exceptions.ZeroDivisionError'> 'integer division or modulo by zero'
+ Traceback (most recent call last):
+  File "regression-tests/add_NA_to_list.py", line 4, in <module>
+    x = 1 / 0
+}
+{list.append(NA) | regression-tests/add_NA_to_list.py <module>:8}
+{list.insert(NA) | regression-tests/add_NA_to_list.py <module>:10}
+{BUILD_LIST(* NA *) | regression-tests/add_NA_to_list.py <module>:12}
+{BUILD_LIST(* NA *) | regression-tests/add_NA_to_list.py <module>:14}
+{PyObject_SetItem(value=NA) | regression-tests/add_NA_to_list.py <module>:18}
+{assign_slice(NA) | regression-tests/add_NA_to_list.py <module>:20}
+{BUILD_LIST(* NA *) | regression-tests/add_NA_to_list.py <module>:24}
+{BUILD_LIST(* NA *) | regression-tests/add_NA_to_list.py <module>:25}
+{BUILD_LIST(* NA *) | regression-tests/add_NA_to_list.py <module>:26}
+{BUILD_LIST(* NA *) | regression-tests/add_NA_to_list.py <module>:27}
+{BUILD_LIST(* NA *) | regression-tests/add_NA_to_list.py <module>:28}
+{BUILD_LIST(* NA *) | regression-tests/add_NA_to_list.py <module>:29}
+{BUILD_LIST(* NA *) | regression-tests/add_NA_to_list.py <module>:30}

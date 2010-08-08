@@ -4197,6 +4197,12 @@ static int
 assign_slice(PyObject *u, PyObject *v, PyObject *w, PyObject *x)
 	/* u[v:w] = x */
 {
+  // pgbovine - NOP if x is NA
+  if (SlopNA_CheckExact(x)) {
+    log_NA_event("assign_slice(NA)");
+    return 0;
+  }
+
 	PyTypeObject *tp = u->ob_type;
 	PySequenceMethods *sq = tp->tp_as_sequence;
 

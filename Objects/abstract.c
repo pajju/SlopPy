@@ -167,6 +167,18 @@ PyObject_SetItem(PyObject *o, PyObject *key, PyObject *value)
 		null_error();
 		return -1;
 	}
+
+  // pgbovine - NOP for NA key or value
+  if (SlopNA_CheckExact(key)) {
+    log_NA_event("PyObject_SetItem(key=NA)");
+    return 0;
+  }
+  else if (SlopNA_CheckExact(value)) {
+    log_NA_event("PyObject_SetItem(value=NA)");
+    return 0;
+  }
+
+
 	m = o->ob_type->tp_as_mapping;
 	if (m && m->mp_ass_subscript)
 		return m->mp_ass_subscript(o, key, value);
