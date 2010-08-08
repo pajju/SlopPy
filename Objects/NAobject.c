@@ -36,10 +36,13 @@ NA_repr(SlopNAObject *self)
 static int
 NA_print(SlopNAObject *self, FILE *fp, int flags)
 {
+  // don't try to print anything fancy or else the interpreter might
+  // croak with an error like this:
+  //   Fatal Python error: PyThreadState_Get: no current thread
+  //
+  // use str() or repr() to get more details
 	Py_BEGIN_ALLOW_THREADS
-  PyObject* repr = NA_repr(self);
-	fputs(PyString_AsString(repr), fp);
-  Py_DECREF(repr);
+	fputs("<NA>", fp);
 	Py_END_ALLOW_THREADS
 	return 0;
 }
