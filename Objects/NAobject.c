@@ -48,41 +48,6 @@ NA_print(SlopNAObject *self, FILE *fp, int flags)
 }
 
 
-// initialize with the 3 arguments of sys.exc_info():
-//   (exception type, exception value, traceback object)
-/*
-static int
-NA_init(SlopNAObject *self, PyObject *args, PyObject *kwds)
-{
-  assert(PyTuple_CheckExact(args));
-
-  if (PyTuple_Size(args) != 3) {
-		PyErr_SetString(PyExc_ValueError, "NA object takes exactly 3 args (those produced by sys.exc_info)");
-    return -1;
-  }
-
-  // we can directly take these 2 fields, since they're picklable
-  self->exc_type      = PyTuple_GET_ITEM(args, 0);
-  self->exc_value     = PyTuple_GET_ITEM(args, 1);
-  Py_INCREF(self->exc_type);
-  Py_INCREF(self->exc_value);
-
-  // unfortunately exc_traceback isn't picklable, so we'll need to
-  // call PyTraceBack_Print to print the traceback into a
-  // cStringIO buffer, then convert that to a string
-  PyObject* exc_traceback = PyTuple_GET_ITEM(args, 2);
-
-  PyObject* buf = PycStringIO->NewOutput(128);
-  PyTraceBack_Print(exc_traceback, buf);
-
-  self->exc_traceback_str = PycStringIO->cgetvalue(buf);
-  Py_DECREF(buf);
-
-  self->next_NA = NULL;
-  return 0;
-}
-*/
-
 static void
 NA_dealloc(SlopNAObject *self) {
   Py_XDECREF(self->exc_type);
@@ -93,6 +58,8 @@ NA_dealloc(SlopNAObject *self) {
 
 
 PyObject* SlopNA_New(PyObject* exc_type, PyObject* exc_value, PyObject* exc_traceback) {
+  assert(pg_activated);
+
   // TODO: use a free list like intobject and friends
   SlopNAObject* self = (SlopNAObject*)PyObject_MALLOC(sizeof(SlopNAObject));
   if (self == NULL)
@@ -121,7 +88,12 @@ PyObject* SlopNA_New(PyObject* exc_type, PyObject* exc_value, PyObject* exc_trac
 
   self->next_NA = NULL;
 
-	return (PyObject*)self;
+  // log this creation event:
+  PyObject* repr = NA_repr(self);
+  PG_LOG(PyString_AsString(repr));
+  Py_DECREF(repr);
+
+  return (PyObject*)self;
 }
 
 
@@ -135,13 +107,15 @@ static SlopNAObject* alias(SlopNAObject* self) {
 }
 
 static PyObject* NA_unary(PyObject* self) {
+  log_NA_event("NA_unary");
   assert(SlopNA_CheckExact(self));
   return (PyObject*)alias((SlopNAObject*)self);
 }
 
 static PyObject* NA_GetAttr(PyObject* self, PyObject* name) {
-  // TODO: create a derived object and link it back to self to track 'lineage'
-  return NA_unary(self);
+  log_NA_event("NA_GetAttr");
+  assert(SlopNA_CheckExact(self));
+  return (PyObject*)alias((SlopNAObject*)self);
 }
 
 static PyObject* NA_SetAttr(PyObject* self, PyObject* name, PyObject* value) {
@@ -149,7 +123,7 @@ static PyObject* NA_SetAttr(PyObject* self, PyObject* name, PyObject* value) {
 }
 
 static PyObject* NA_item(SlopNAObject* self, Py_ssize_t i) {
-  // TODO: create a derived object and link it back to self to track 'lineage'
+  log_NA_event("NA_item");
   return (PyObject*)alias(self);
 }
 
@@ -159,6 +133,7 @@ static int NA_ass_item(SlopNAObject *a, Py_ssize_t i, PyObject *v) {
 
 
 static PyObject* NA_slice(SlopNAObject* self, Py_ssize_t ilow, Py_ssize_t ihigh) {
+  log_NA_event("NA_slice");
   return (PyObject*)alias(self);
 }
 
@@ -167,10 +142,12 @@ static Py_ssize_t NA_length(SlopNAObject* self) {
 }
 
 static PyObject* NA_concat(SlopNAObject *a, PyObject *bb) {
+  log_NA_event("NA_concat");
   return (PyObject*)alias(a);
 }
 
 static PyObject* NA_repeat(SlopNAObject *a, Py_ssize_t n) {
+  log_NA_event("NA_repeat");
   return (PyObject*)alias(a);
 }
 
@@ -183,10 +160,12 @@ static int NA_contains(SlopNAObject *a, PyObject *el) {
 }
 
 static PyObject* NA_inplace_concat(PyListObject *self, PyObject *other) {
+  log_NA_event("NA_inplace_concat");
   return (PyObject*)self;
 }
 
 static PyObject* NA_inplace_repeat(SlopNAObject *self, Py_ssize_t n) {
+  log_NA_event("NA_inplace_repeat");
   return (PyObject*)self;
 }
 
@@ -206,6 +185,7 @@ static PySequenceMethods NA_as_sequence = {
 
 
 static PyObject* NA_subscript(SlopNAObject* self, PyObject* item) {
+  log_NA_event("NA_subscript");
   return (PyObject*)alias(self);
 }
 
@@ -221,6 +201,7 @@ static PyMappingMethods NA_as_mapping = {
 
 
 static PyObject* NA_call(SlopNAObject *self, PyObject *args, PyObject *kwds) {
+  log_NA_event("NA_call");
   return (PyObject*)alias(self);
 }
 
@@ -304,7 +285,7 @@ PyTypeObject SlopNA_Type = {
   0,					/* tp_descr_get */
   0,					/* tp_descr_set */
   0,					/* tp_dictoffset */
-  0,/*(initproc)NA_init,*/		/* tp_init */
+  0,          /* tp_init */
   0,					/* tp_alloc */
   PyType_GenericNew,		/* tp_new */
   0,      		/* tp_free */

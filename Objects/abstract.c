@@ -5,6 +5,8 @@
 #include "structmember.h" /* we need the offsetof() macro from there */
 #include "longintrepr.h"
 
+#include "slop.h" // pgbovine
+
 #define NEW_STYLE_NUMBER(o) PyType_HasFeature((o)->ob_type, \
 				Py_TPFLAGS_CHECKTYPES)
 
@@ -901,10 +903,12 @@ binary_op1(PyObject *v, PyObject *w, const int op_slot)
 
   // pgbovine - if v is NA, return v; if w is NA, return w
   if (SlopNA_CheckExact(v)) {
+    log_NA_event("binary_op(NA,*)");
     Py_INCREF(v);
     return v;
   }
   else if (SlopNA_CheckExact(w)) {
+    log_NA_event("binary_op(*,NA)");
     Py_INCREF(w);
     return w;
   }
@@ -1031,14 +1035,17 @@ ternary_op(PyObject *v,
 
   // pgbovine - if v is NA, return v; if w is NA, return w; if z is NA, return z
   if (SlopNA_CheckExact(v)) {
+    log_NA_event("ternary_op(NA,*,*)");
     Py_INCREF(v);
     return v;
   }
   else if (SlopNA_CheckExact(w)) {
+    log_NA_event("ternary_op(*,NA,*)");
     Py_INCREF(w);
     return w;
   }
   else if (SlopNA_CheckExact(z)) {
+    log_NA_event("ternary_op(*,*,NA)");
     Py_INCREF(z);
     return z;
   }

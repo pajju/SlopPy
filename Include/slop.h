@@ -31,8 +31,17 @@ int transitively_within_try_block(void);
 int get_NA_stack_action(int opcode);
 
 int pg_activated;
+
 void pg_initialize(void);
 void pg_finalize(void);
+
+#define PG_LOG(str) fprintf(verbose_log_file, "%s\n", str)
+#define PG_LOG_PRINTF(...) fprintf (verbose_log_file, __VA_ARGS__)
+
+// initialize in pg_initialize(), destroy in pg_finalize()
+FILE* verbose_log_file;
+
+void log_NA_event(const char* event_name);
 
 
 #ifdef __cplusplus

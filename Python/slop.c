@@ -13,10 +13,13 @@
 #include "slop.h"
 #include "frameobject.h"
 #include "opcode.h"
+#include "code.h"
+
 
 // start this at 0 and then only set to 1 after pg_initialize()
 int pg_activated = 0;
 
+FILE* verbose_log_file = NULL;
 
 // References to Python standard library functions:
 PyObject* cPickle_load_func = NULL;           // cPickle.load
@@ -379,6 +382,10 @@ void pg_initialize(void) {
 
   assert(!pg_activated);
 
+  // don't need this yet ...
+
+  /*
+
   // import some useful Python modules, so that we can call their functions:
   PyObject* cPickle_module = PyImport_ImportModule("cPickle"); // increments refcount
 
@@ -401,6 +408,11 @@ void pg_initialize(void) {
   assert(cPickle_dumpstr_func);
   assert(cPickle_load_func);
 
+  */
+
+
+  verbose_log_file = fopen("slop_verbose.log", "w");
+
   pg_activated = 1;
 }
 
@@ -417,5 +429,18 @@ void pg_finalize(void) {
   // turn this off ASAP
   pg_activated = 0;
 
+  fclose(verbose_log_file);
+  verbose_log_file = NULL;
+}
+
+
+void log_NA_event(const char* event_name) {
+  PyFrameObject* f = PyEval_GetFrame();
+  int lineno = PyCode_Addr2Line(f->f_code, f->f_lasti);
+  PG_LOG_PRINTF("{%s | %s %s:%d}\n",
+                event_name,
+                PyString_AsString(f->f_code->co_filename),
+                PyString_AsString(f->f_code->co_name),
+                lineno);
 }
 
