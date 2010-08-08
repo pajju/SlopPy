@@ -1,0 +1,5 @@
+{NA <type 'exceptions.ZeroDivisionError'> 'integer division or modulo by zero'
+ Traceback (most recent call last):
+  File "regression-tests/divzero.py", line 1, in <module>
+    x = 1 / 0
+}
