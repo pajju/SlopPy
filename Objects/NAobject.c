@@ -22,13 +22,13 @@ NA_repr(SlopNAObject *self)
 
   PyObject* repr = PyTuple_Pack(3, type_repr, value_repr, self->exc_traceback_str);
 
-  PyObject* fmt = PyString_FromString("NA(%s, %s, %s)");
+  PyObject* fmt = PyString_FromString("{NA %s %s\n %s\}");
   PyObject* ret = PyString_Format(fmt, repr);
-
   Py_DECREF(fmt);
+
+  Py_DECREF(repr);
   Py_DECREF(value_repr);
   Py_DECREF(type_repr);
-  Py_DECREF(repr);
 
   return ret;
 }
@@ -36,11 +36,10 @@ NA_repr(SlopNAObject *self)
 static int
 NA_print(SlopNAObject *self, FILE *fp, int flags)
 {
-  // don't do any fancy printing or else Python will crash with a weird
-  // error like:
-  //   Fatal Python error: PyThreadState_Get: no current thread
 	Py_BEGIN_ALLOW_THREADS
-	fputs("<NA>", fp);
+  PyObject* repr = NA_repr(self);
+	fputs(PyString_AsString(repr), fp);
+  Py_DECREF(repr);
 	Py_END_ALLOW_THREADS
 	return 0;
 }

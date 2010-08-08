@@ -2597,74 +2597,76 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
 		if (why == WHY_RERAISE)
 			why = WHY_EXCEPTION;
 
-    // pgbovine - if we're not currently within a 'try' block (even
-    // transitively in a parent function), then all exceptions will go
-    // uncaught, so we will instead silence the exception and replace
-    // it with a special "NA" value
-    if (why == WHY_EXCEPTION && !transitively_within_try_block()) {
-      PyThreadState *tstate = PyThreadState_GET();
-      PyObject* p_type = tstate->curexc_type;
-      //PyObject_Print(p_type, stdout, 0); printf("\n");
+    if (pg_activated) {
+      // pgbovine - if we're not currently within a 'try' block (even
+      // transitively in a parent function), then all exceptions will go
+      // uncaught, so we will instead silence the exception and replace
+      // it with a special "NA" value
+      if (why == WHY_EXCEPTION && !transitively_within_try_block()) {
+        PyThreadState *tstate = PyThreadState_GET();
+        PyObject* p_type = tstate->curexc_type;
+        //PyObject_Print(p_type, stdout, 0); printf("\n");
 
-      // ignore certain built-in exception types because they can
-      // occur during normal execution
-      if (!((p_type == PyExc_StopIteration) ||
-            (p_type == PyExc_GeneratorExit) ||
-            (p_type == PyExc_AssertionError) ||
-            (p_type == PyExc_Warning) ||
-            (p_type == PyExc_UserWarning) ||
-            (p_type == PyExc_DeprecationWarning) ||
-            (p_type == PyExc_PendingDeprecationWarning) ||
-            (p_type == PyExc_SyntaxWarning) ||
-            (p_type == PyExc_RuntimeWarning) ||
-            (p_type == PyExc_FutureWarning) ||
-            (p_type == PyExc_ImportWarning) ||
-            (p_type == PyExc_UnicodeWarning) ||
-            (p_type == PyExc_BytesWarning))) {
-        PyObject *exc, *val, *tb;
-        PyErr_Fetch(&exc, &val, &tb);
-        PyErr_Clear();
-        why = WHY_NOT;
-        // x is the 'result'
-        x = SlopNA_New(exc, val, tb);
+        // ignore certain built-in exception types because they can
+        // occur during normal execution
+        if (!((p_type == PyExc_StopIteration) ||
+              (p_type == PyExc_GeneratorExit) ||
+              (p_type == PyExc_AssertionError) ||
+              (p_type == PyExc_Warning) ||
+              (p_type == PyExc_UserWarning) ||
+              (p_type == PyExc_DeprecationWarning) ||
+              (p_type == PyExc_PendingDeprecationWarning) ||
+              (p_type == PyExc_SyntaxWarning) ||
+              (p_type == PyExc_RuntimeWarning) ||
+              (p_type == PyExc_FutureWarning) ||
+              (p_type == PyExc_ImportWarning) ||
+              (p_type == PyExc_UnicodeWarning) ||
+              (p_type == PyExc_BytesWarning))) {
+          PyObject *exc, *val, *tb;
+          PyErr_Fetch(&exc, &val, &tb);
+          PyErr_Clear();
+          why = WHY_NOT;
+          // x is the 'result'
+          x = SlopNA_New(exc, val, tb);
 
-        // now figure out what to do with x on the stack ...
-        if (opcode == UNPACK_SEQUENCE) {
-          int i;
-          for (i = 0; i < oparg; i++) {
-            Py_INCREF(x);
+          // now figure out what to do with x on the stack ...
+          if (opcode == UNPACK_SEQUENCE) {
+            int i;
+            for (i = 0; i < oparg; i++) {
+              Py_INCREF(x);
+              PUSH(x);
+            }
+            // we've done 1 more than necessary, since SlopNA_New already does a Py_INCREF
+            Py_DECREF(x);
+          }
+          // these opcodes only PUSH(x) on success
+          else if (opcode == BUILD_TUPLE ||
+                   opcode == BUILD_LIST) {
             PUSH(x);
           }
-          // we've done 1 more than necessary, since SlopNA_New already does a Py_INCREF
-          Py_DECREF(x);
-        }
-        // these opcodes only PUSH(x) on success
-        else if (opcode == BUILD_TUPLE ||
-                 opcode == BUILD_LIST) {
-          PUSH(x);
-        }
-        // these opcodes do an unconditional PUSH(x), so if there's an
-        // error, then clobber it with a SET_TOP
-        else if (opcode == BUILD_SLICE ||
-                 opcode == CALL_FUNCTION ||
-                 opcode == CALL_FUNCTION_VAR ||
-                 opcode == CALL_FUNCTION_KW ||
-                 opcode == CALL_FUNCTION_VAR_KW) {
-          SET_TOP(x);
-        }
-        else {
-          int action = get_NA_stack_action(opcode);
-          if (action == DO_PUSH_1) {
-            PUSH(x);
-          }
-          else if (action == DO_SET_TOP_1) {
+          // these opcodes do an unconditional PUSH(x), so if there's an
+          // error, then clobber it with a SET_TOP
+          else if (opcode == BUILD_SLICE ||
+                   opcode == CALL_FUNCTION ||
+                   opcode == CALL_FUNCTION_VAR ||
+                   opcode == CALL_FUNCTION_KW ||
+                   opcode == CALL_FUNCTION_VAR_KW) {
             SET_TOP(x);
           }
-          else if (action == DO_NOTHING) {
-            // NOP
-          }
           else {
-            Py_FatalError("whoops, case unhandled by get_NA_stack_action()!");
+            int action = get_NA_stack_action(opcode);
+            if (action == DO_PUSH_1) {
+              PUSH(x);
+            }
+            else if (action == DO_SET_TOP_1) {
+              SET_TOP(x);
+            }
+            else if (action == DO_NOTHING) {
+              // NOP
+            }
+            else {
+              Py_FatalError("whoops, case unhandled by get_NA_stack_action()!");
+            }
           }
         }
       }
