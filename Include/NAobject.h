@@ -21,12 +21,12 @@ extern "C" {
 // 'NA' stands for 'Not Available' (i.e., missing data), inspired by NA type in R:
 //   http://www.statmethods.net/input/missingdata.html
 
-typedef struct {
+typedef struct _SlopNAObject {
   PyObject_HEAD
-  // same as those returned by sys.exc_info()
   PyObject *exc_type;
   PyObject *exc_value;
-  PyObject *exc_traceback;
+  PyObject *exc_traceback_str; // string representation of traceback object
+  struct _SlopNAObject *next_NA; // implements 'chaining' of NA objects
 } SlopNAObject;
 
 

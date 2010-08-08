@@ -30,6 +30,11 @@ int transitively_within_try_block(void);
 #define NEED_SPECIAL_HANDLING  103
 int get_NA_stack_action(int opcode);
 
+int pg_activated;
+void pg_initialize(void);
+void pg_finalize(void);
+
+
 #ifdef __cplusplus
 }
 #endif

@@ -14,6 +14,16 @@
 #include "frameobject.h"
 #include "opcode.h"
 
+// start this at 0 and then only set to 1 after pg_initialize()
+int pg_activated = 0;
+
+
+// References to Python standard library functions:
+PyObject* cPickle_load_func = NULL;           // cPickle.load
+PyObject* cPickle_dumpstr_func = NULL;        // cPickle.dumps
+PyObject* cPickle_dump_func = NULL;           // cPickle.dump
+
+
 // are we currently within a 'try' block (even transitively for ANY
 // function on stack?)
 int transitively_within_try_block() {
@@ -358,5 +368,54 @@ int get_NA_stack_action(int opcode) {
   fprintf(stderr, "problematic opcode: %d\n", opcode);
   Py_FatalError("unreachable code in get_NA_stack_action()");
   return NEED_SPECIAL_HANDLING;
+}
+
+
+// called at the beginning of execution
+void pg_initialize(void) {
+#ifdef DISABLE_MEMOIZE
+  return;
+#endif
+
+  assert(!pg_activated);
+
+  // import some useful Python modules, so that we can call their functions:
+  PyObject* cPickle_module = PyImport_ImportModule("cPickle"); // increments refcount
+
+  // this is the first C extension module we're trying to import, so do
+  // a check to make sure it exists, and if not, simply punt on
+  // initialization altogether.  This will ensure that SlopPy can compile
+  // after a 'make clean' (since cPickle doesn't exist yet at that time)
+  if (!cPickle_module) {
+    fprintf(stderr, "WARNING: cPickle module doesn't yet exist, so SlopPy features not activated.\n");
+    return;
+  }
+
+  assert(cPickle_module);
+  cPickle_dump_func = PyObject_GetAttrString(cPickle_module, "dump");
+  cPickle_dumpstr_func = PyObject_GetAttrString(cPickle_module, "dumps");
+  cPickle_load_func = PyObject_GetAttrString(cPickle_module, "load");
+  Py_DECREF(cPickle_module);
+
+  assert(cPickle_dump_func);
+  assert(cPickle_dumpstr_func);
+  assert(cPickle_load_func);
+
+  pg_activated = 1;
+}
+
+// called at the end of execution
+void pg_finalize(void) {
+#ifdef DISABLE_MEMOIZE
+  return;
+#endif
+
+  if (!pg_activated) {
+    return;
+  }
+
+  // turn this off ASAP
+  pg_activated = 0;
+
 }
 

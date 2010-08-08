@@ -12,6 +12,7 @@
 
 #include "NAobject.h"
 #include "slop.h"
+#include "cStringIO.h"
 
 static PyObject *
 NA_repr(SlopNAObject *self)
@@ -19,9 +20,9 @@ NA_repr(SlopNAObject *self)
   PyObject* type_repr = PyObject_Repr(self->exc_type);
   PyObject* value_repr = PyObject_Repr(self->exc_value);
 
-  PyObject* repr = PyTuple_Pack(2, type_repr, value_repr);
+  PyObject* repr = PyTuple_Pack(3, type_repr, value_repr, self->exc_traceback_str);
 
-  PyObject* fmt = PyString_FromString("NA(%s, %s)");
+  PyObject* fmt = PyString_FromString("NA(%s, %s, %s)");
   PyObject* ret = PyString_Format(fmt, repr);
 
   Py_DECREF(fmt);
@@ -47,6 +48,7 @@ NA_print(SlopNAObject *self, FILE *fp, int flags)
 
 // initialize with the 3 arguments of sys.exc_info():
 //   (exception type, exception value, traceback object)
+/*
 static int
 NA_init(SlopNAObject *self, PyObject *args, PyObject *kwds)
 {
@@ -57,23 +59,36 @@ NA_init(SlopNAObject *self, PyObject *args, PyObject *kwds)
     return -1;
   }
 
+  // we can directly take these 2 fields, since they're picklable
   self->exc_type      = PyTuple_GET_ITEM(args, 0);
   self->exc_value     = PyTuple_GET_ITEM(args, 1);
-  self->exc_traceback = PyTuple_GET_ITEM(args, 2);
-
   Py_INCREF(self->exc_type);
   Py_INCREF(self->exc_value);
-  Py_INCREF(self->exc_traceback);
 
+  // unfortunately exc_traceback isn't picklable, so we'll need to
+  // call PyTraceBack_Print to print the traceback into a
+  // cStringIO buffer, then convert that to a string
+  PyObject* exc_traceback = PyTuple_GET_ITEM(args, 2);
+
+  PyObject* buf = PycStringIO->NewOutput(128);
+  PyTraceBack_Print(exc_traceback, buf);
+
+  self->exc_traceback_str = PycStringIO->cgetvalue(buf);
+  Py_DECREF(buf);
+
+  self->next_NA = NULL;
   return 0;
 }
+*/
 
 static void
 NA_dealloc(SlopNAObject *self) {
   Py_XDECREF(self->exc_type);
   Py_XDECREF(self->exc_value);
-  Py_XDECREF(self->exc_traceback);
+  Py_XDECREF(self->exc_traceback_str);
+  Py_XDECREF(self->next_NA);
 }
+
 
 PyObject* SlopNA_New(PyObject* exc_type, PyObject* exc_value, PyObject* exc_traceback) {
   // TODO: use a free list like intobject and friends
@@ -82,13 +97,27 @@ PyObject* SlopNA_New(PyObject* exc_type, PyObject* exc_value, PyObject* exc_trac
     return (PyObject *)PyErr_NoMemory();
 	PyObject_INIT(self, &SlopNA_Type);
 
+  // we can directly take these 2 fields, since they're picklable
   self->exc_type = exc_type;
   self->exc_value = exc_value;
-  self->exc_traceback = exc_traceback;
-
   Py_INCREF(self->exc_type);
   Py_INCREF(self->exc_value);
-  Py_INCREF(self->exc_traceback);
+
+  // unfortunately exc_traceback isn't picklable, so we'll need to
+  // call PyTraceBack_Print to print the traceback into a
+  // cStringIO buffer, then convert that to a string
+
+  if (!PycStringIO) {
+    PycString_IMPORT; // don't repeat imports
+  }
+
+  PyObject* buf = PycStringIO->NewOutput(128);
+  PyTraceBack_Print(exc_traceback, buf);
+
+  self->exc_traceback_str = PycStringIO->cgetvalue(buf);
+  Py_DECREF(buf);
+
+  self->next_NA = NULL;
 
 	return (PyObject*)self;
 }
@@ -273,7 +302,7 @@ PyTypeObject SlopNA_Type = {
   0,					/* tp_descr_get */
   0,					/* tp_descr_set */
   0,					/* tp_dictoffset */
-  (initproc)NA_init,		/* tp_init */
+  0,/*(initproc)NA_init,*/		/* tp_init */
   0,					/* tp_alloc */
   PyType_GenericNew,		/* tp_new */
   0,      		/* tp_free */
