@@ -1,0 +1,27 @@
+{NA <type 'exceptions.ZeroDivisionError'> 'integer division or modulo by zero'
+ Traceback (most recent call last):
+  File "regression-tests/NA_inplace_binary_ops.py", line 3, in <module>
+    x = 1 / 0
+}
+{binary_op(NA,*) | regression-tests/NA_inplace_binary_ops.py <module>:6}
+{binary_op(NA,*) | regression-tests/NA_inplace_binary_ops.py <module>:7}
+{binary_op(NA,*) | regression-tests/NA_inplace_binary_ops.py <module>:8}
+{binary_op(NA,*) | regression-tests/NA_inplace_binary_ops.py <module>:9}
+{binary_op(NA,*) | regression-tests/NA_inplace_binary_ops.py <module>:10}
+{binary_op(NA,*) | regression-tests/NA_inplace_binary_ops.py <module>:11}
+{binary_op(NA,*) | regression-tests/NA_inplace_binary_ops.py <module>:12}
+{binary_op(NA,*) | regression-tests/NA_inplace_binary_ops.py <module>:13}
+{binary_op(NA,*) | regression-tests/NA_inplace_binary_ops.py <module>:14}
+{binary_op(NA,*) | regression-tests/NA_inplace_binary_ops.py <module>:15}
+{binary_op(NA,*) | regression-tests/NA_inplace_binary_ops.py <module>:16}
+{binary_op(*,NA) | regression-tests/NA_inplace_binary_ops.py <module>:20}
+{binary_op(*,NA) | regression-tests/NA_inplace_binary_ops.py <module>:23}
+{binary_op(*,NA) | regression-tests/NA_inplace_binary_ops.py <module>:26}
+{binary_op(*,NA) | regression-tests/NA_inplace_binary_ops.py <module>:29}
+{binary_op(*,NA) | regression-tests/NA_inplace_binary_ops.py <module>:32}
+{binary_op(*,NA) | regression-tests/NA_inplace_binary_ops.py <module>:35}
+{binary_op(*,NA) | regression-tests/NA_inplace_binary_ops.py <module>:38}
+{binary_op(*,NA) | regression-tests/NA_inplace_binary_ops.py <module>:41}
+{binary_op(*,NA) | regression-tests/NA_inplace_binary_ops.py <module>:44}
+{binary_op(*,NA) | regression-tests/NA_inplace_binary_ops.py <module>:47}
+{binary_op(*,NA) | regression-tests/NA_inplace_binary_ops.py <module>:50}
