@@ -2675,6 +2675,7 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
         if (!((p_type == PyExc_StopIteration) ||
               (p_type == PyExc_GeneratorExit) ||
               (p_type == PyExc_SystemExit) ||
+              (p_type == PyExc_AssertionError) ||
               (p_type == PyExc_Warning) ||
               (p_type == PyExc_UserWarning) ||
               (p_type == PyExc_DeprecationWarning) ||
