@@ -271,7 +271,7 @@ static int bytecode_stack_effects[][2] = {
   {-2, -2}, //#define RETURN_VALUE	83
   {1, 0}, //#define IMPORT_STAR	84
   {3, 0}, //#define EXEC_STMT	85
-  {1, 1}, //#define YIELD_VALUE	86 (TODO: uncertaina about this one)
+  {1, 1}, //#define YIELD_VALUE	86 (TODO: uncertain about this one)
   {-2, -2}, //#define POP_BLOCK	87
   {-2, -2}, //#define END_FINALLY	88
   {3, 1}, //#define BUILD_CLASS	89

@@ -2661,10 +2661,11 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
       // transitively in a parent function), then all exceptions will go
       // uncaught, so we will instead silence the exception and replace
       // it with a special "NA" value
-      // (EDIT: also don't try anything weird for RAISE_VARARGS)
+      // (EDIT: also don't try anything for certain 'weird' opcodes)
       if (why == WHY_EXCEPTION &&
           !transitively_within_try_block() &&
-          (opcode != RAISE_VARARGS)) {
+          (opcode != RAISE_VARARGS) &&
+          (opcode != END_FINALLY)) {
         PyThreadState *tstate = PyThreadState_GET();
         PyObject* p_type = tstate->curexc_type;
         //PyObject_Print(p_type, stdout, 0); printf("\n");
