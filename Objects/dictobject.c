@@ -2222,7 +2222,30 @@ dict_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 static int
 dict_init(PyObject *self, PyObject *args, PyObject *kwds)
 {
-	return dict_update_common(self, args, kwds, "dict");
+  // pgbovine - eliminate all NA objects from kwds to support things like:
+  //   assert dict(key1=x, key2=x, hello='world') == {'hello' : 'world'}
+  // where x is an NA object
+  if (kwds) {
+    PyObject* new_kwds = PyDict_New();
+
+    PyObject* k = NULL;
+    PyObject* v = NULL;
+    Py_ssize_t pos = 0;
+    while (PyDict_Next(kwds, &pos, &k, &v)) {
+      if (SlopNA_CheckExact(v)) {
+        log_NA_event("dict_init(value=NA)");
+        continue;
+      }
+      PyDict_SetItem(new_kwds, k, v);
+    }
+
+    int ret = dict_update_common(self, args, new_kwds, "dict");
+    Py_XDECREF(new_kwds);
+    return ret;
+  }
+  else {
+    return dict_update_common(self, args, kwds, "dict");
+  }
 }
 
 static PyObject *

@@ -21,3 +21,8 @@ y = d.setdefault('unknown', x)
 assert y is x
 assert len(d) == 0
 
+assert dict(key1=x) == {}
+assert dict(key1=x, key2=x) == {}
+assert dict(key1=x, key2=x, hello='world') == {'hello' : 'world'}
+assert dict(key1=x, key2=x, hello='world', blah=5) == {'hello' : 'world', 'blah' : 5}
+

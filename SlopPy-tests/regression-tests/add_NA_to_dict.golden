@@ -11,3 +11,10 @@
 {PyObject_SetItem(key=NA) | regression-tests/add_NA_to_dict.py <module>:16}
 {STORE_MAP(key=NA) | regression-tests/add_NA_to_dict.py <module>:18}
 {dict.setdefault(*, NA) | regression-tests/add_NA_to_dict.py <module>:20}
+{dict_init(value=NA) | regression-tests/add_NA_to_dict.py <module>:24}
+{dict_init(value=NA) | regression-tests/add_NA_to_dict.py <module>:25}
+{dict_init(value=NA) | regression-tests/add_NA_to_dict.py <module>:25}
+{dict_init(value=NA) | regression-tests/add_NA_to_dict.py <module>:26}
+{dict_init(value=NA) | regression-tests/add_NA_to_dict.py <module>:26}
+{dict_init(value=NA) | regression-tests/add_NA_to_dict.py <module>:27}
+{dict_init(value=NA) | regression-tests/add_NA_to_dict.py <module>:27}
