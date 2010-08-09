@@ -1,0 +1,10 @@
+{NA <type 'exceptions.ZeroDivisionError'> 'integer division or modulo by zero'
+ Traceback (most recent call last):
+  File "regression-tests/NA_misc_ops.py", line 3, in <module>
+    x = 1 / 0
+}
+{NA_GetAttr | regression-tests/NA_misc_ops.py <module>:6}
+{NA_subscript | regression-tests/NA_misc_ops.py <module>:8}
+{NA_slice | regression-tests/NA_misc_ops.py <module>:10}
+{NA_call | regression-tests/NA_misc_ops.py <module>:14}
+{NA_call | regression-tests/NA_misc_ops.py <module>:15}
