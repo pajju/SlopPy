@@ -2016,10 +2016,34 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
 		case BUILD_TUPLE:
 			x = PyTuple_New(oparg);
 			if (x != NULL) {
+        // pgbovine - don't insert NA elts
+        int num_NA_elts = 0;
+        int i;
+        for (i = 1; i <= oparg; i++) {
+          PyObject* elt = stack_pointer[-1 * i];
+          if (SlopNA_CheckExact(elt)) {
+            num_NA_elts++;
+          }
+        }
+        int delta = num_NA_elts;
+        if (num_NA_elts > 0) {
+          log_NA_event("BUILD_TUPLE(* NA *)");
+        }
+
 				for (; --oparg >= 0;) {
 					w = POP();
-					PyTuple_SET_ITEM(x, oparg, w);
+
+          // pgbovine
+          if (SlopNA_CheckExact(w)) {
+            delta -= 1;
+            assert(delta >= 0);
+            continue;
+          }
+
+					PyTuple_SET_ITEM(x, oparg - delta, w);
 				}
+        assert(delta == 0); // pgbovine
+        Py_SIZE(x) -= num_NA_elts; // pgbovine
 				PUSH(x);
 				continue;
 			}

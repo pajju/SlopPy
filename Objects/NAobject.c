@@ -205,9 +205,8 @@ static PyObject* NA_call(SlopNAObject *self, PyObject *args, PyObject *kwds) {
   return (PyObject*)alias(self);
 }
 
-// really lame --- always hash to the same thing
 static long NA_hash(SlopNAObject *a) {
-  return 0;
+  return PyObject_Hash(a->exc_traceback_str);
 }
 
 

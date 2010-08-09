@@ -15,39 +15,48 @@ ALL_TESTS = [e for e in os.listdir(REGTEST_DIR) if e.endswith('.py')]
 def execute(test_script):
   assert os.path.isfile(test_script)
   retcode = os.system("%s %s > /dev/null 2> /dev/null" % (SLOPPY_BIN, test_script))
+
+  outfile = test_script[:-3] + '.out'
+  assert os.path.isfile(SLOP_VERBOSE_LOG)
+  os.rename(SLOP_VERBOSE_LOG, outfile)
+
   return retcode != 0
+
 
 def clobber_golden_file(golden_file):
   print '  Overriding golden file'
-  shutil.copy(SLOP_VERBOSE_LOG, golden_file)
+  outfile = golden_file.replace('.golden', '.out')
+  assert os.path.isfile(outfile)
+  shutil.copy(outfile, golden_file)
 
 
 # returns True if there is a diff, False otherwise
 def diff_test_golden_data(golden_file):
-  assert os.path.isfile(SLOP_VERBOSE_LOG)
+  outfile = golden_file.replace('.golden', '.out')
+  assert os.path.isfile(outfile)
   assert os.path.isfile(golden_file)
-  return open(SLOP_VERBOSE_LOG).readlines() != \
+  return open(outfile).readlines() != \
          open(golden_file).readlines()
 
 
 def diff_test_output(test_name):
   golden_file = os.path.join(REGTEST_DIR, test_name[:-3] + '.golden')
   assert os.path.isfile(golden_file)
-  assert os.path.isfile(SLOP_VERBOSE_LOG)
+
+  outfile = golden_file.replace('.golden', '.out')
+  assert os.path.isfile(outfile)
 
   golden_s = open(golden_file).readlines()
-  out_s = open(SLOP_VERBOSE_LOG).readlines()
+  out_s = open(outfile).readlines()
 
   for line in difflib.unified_diff(golden_s, out_s, \
-                                   fromfile=golden_file, tofile=SLOP_VERBOSE_LOG):
+                                   fromfile=golden_file, tofile=outfile):
     print line,
 
 
 def run_test(test_name, clobber_golden=False):
   print 'Testing', test_name
   assert test_name.endswith('.py')
-  if os.path.isfile(SLOP_VERBOSE_LOG):
-    os.remove(SLOP_VERBOSE_LOG)
 
   test_script = os.path.join(REGTEST_DIR, test_name)
   has_error = execute(test_script)
