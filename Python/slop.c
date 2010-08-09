@@ -436,7 +436,15 @@ void pg_finalize(void) {
 
 void log_NA_event(const char* event_name) {
   PyFrameObject* f = PyEval_GetFrame();
-  int lineno = PyCode_Addr2Line(f->f_code, f->f_lasti);
+
+  // stolen from frame_getlineno in Objects/frameobject.c
+  int lineno;
+  if (f->f_trace)
+    lineno = f->f_lineno;
+  else
+    lineno = PyCode_Addr2Line(f->f_code, f->f_lasti);
+
+
   PG_LOG_PRINTF("{%s | %s %s:%d}\n",
                 event_name,
                 PyString_AsString(f->f_code->co_filename),

@@ -2664,7 +2664,6 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
       // (EDIT: also don't try anything for certain 'weird' opcodes)
       if (why == WHY_EXCEPTION &&
           !transitively_within_try_block() &&
-          (opcode != RAISE_VARARGS) &&
           (opcode != END_FINALLY)) {
         PyThreadState *tstate = PyThreadState_GET();
         PyObject* p_type = tstate->curexc_type;
@@ -2675,7 +2674,6 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
         if (!((p_type == PyExc_StopIteration) ||
               (p_type == PyExc_GeneratorExit) ||
               (p_type == PyExc_SystemExit) ||
-              (p_type == PyExc_AssertionError) ||
               (p_type == PyExc_Warning) ||
               (p_type == PyExc_UserWarning) ||
               (p_type == PyExc_DeprecationWarning) ||
@@ -2692,9 +2690,12 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
           why = WHY_NOT;
           // x is the 'result'
           x = SlopNA_New(exc, val, tb);
+          assert(Py_REFCNT(x) == 1);
 
           // now figure out what to do with x on the stack ...
-          if (opcode == UNPACK_SEQUENCE) {
+          if (opcode == UNPACK_SEQUENCE ||
+              opcode == RAISE_VARARGS) {
+            // push x on the stack oparg times
             int i;
             for (i = 0; i < oparg; i++) {
               Py_INCREF(x);
@@ -2732,6 +2733,22 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
               Py_FatalError("whoops, case unhandled by get_NA_stack_action()!");
             }
           }
+
+          // special handling for AssertionError ...
+          // taint ALL locals as NA since if you violate an assertion,
+          // then all bets are off as to the program's current state.
+          //
+          // TODO: possible future refinement ... only taint those
+          // locals that were loaded on the SAME LINE as the assertion
+          // was raised
+          if (p_type == PyExc_AssertionError) {
+            int i;
+            for (i = 0; i < co->co_nlocals; i++) {
+              Py_INCREF(x);
+              SETLOCAL(i, x);
+            }
+          }
+
         }
       }
     }
