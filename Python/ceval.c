@@ -2661,7 +2661,10 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
       // transitively in a parent function), then all exceptions will go
       // uncaught, so we will instead silence the exception and replace
       // it with a special "NA" value
-      if (why == WHY_EXCEPTION && !transitively_within_try_block()) {
+      // (EDIT: also don't try anything weird for RAISE_VARARGS)
+      if (why == WHY_EXCEPTION &&
+          !transitively_within_try_block() &&
+          (opcode != RAISE_VARARGS)) {
         PyThreadState *tstate = PyThreadState_GET();
         PyObject* p_type = tstate->curexc_type;
         //PyObject_Print(p_type, stdout, 0); printf("\n");
@@ -2670,7 +2673,7 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
         // occur during normal execution
         if (!((p_type == PyExc_StopIteration) ||
               (p_type == PyExc_GeneratorExit) ||
-              (p_type == PyExc_AssertionError) ||
+              (p_type == PyExc_SystemExit) ||
               (p_type == PyExc_Warning) ||
               (p_type == PyExc_UserWarning) ||
               (p_type == PyExc_DeprecationWarning) ||
@@ -4233,7 +4236,8 @@ assign_slice(PyObject *u, PyObject *v, PyObject *w, PyObject *x)
 	/* u[v:w] = x */
 {
   // pgbovine - NOP if x is NA
-  if (SlopNA_CheckExact(x)) {
+  // (x could be NULL)
+  if (x && SlopNA_CheckExact(x)) {
     log_NA_event("assign_slice(NA)");
     return 0;
   }

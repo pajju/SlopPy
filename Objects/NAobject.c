@@ -68,7 +68,15 @@ PyObject* SlopNA_New(PyObject* exc_type, PyObject* exc_value, PyObject* exc_trac
 
   // we can directly take these 2 fields, since they're picklable
   self->exc_type = exc_type;
-  self->exc_value = exc_value;
+
+  // could be NULL, in which case use Py_None
+  if (exc_value) {
+    self->exc_value = exc_value;
+  }
+  else {
+    self->exc_value = Py_None;
+  }
+
   Py_INCREF(self->exc_type);
   Py_INCREF(self->exc_value);
 
