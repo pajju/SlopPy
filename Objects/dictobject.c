@@ -9,6 +9,9 @@
 
 #include "Python.h"
 
+#include "NAobject.h" // pgbovine
+#include "slop.h" // pgbovine
+
 
 /* Set a key error with the specified argument, wrapping it in a
  * tuple automatically so that tuple keys are not unpacked as the
@@ -1872,8 +1875,15 @@ dict_setdefault(register PyDictObject *mp, PyObject *args)
 	val = ep->me_value;
 	if (val == NULL) {
 		val = failobj;
-		if (PyDict_SetItem((PyObject*)mp, key, failobj))
-			val = NULL;
+
+    // pgbovine
+    if (SlopNA_CheckExact(failobj)) {
+      log_NA_event("dict.setdefault(*, NA)");
+    }
+    else {
+      if (PyDict_SetItem((PyObject*)mp, key, failobj))
+        val = NULL;
+    }
 	}
 	Py_XINCREF(val);
 	return val;
