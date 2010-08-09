@@ -217,6 +217,13 @@ static long NA_hash(SlopNAObject *a) {
   return PyObject_Hash(a->exc_traceback_str);
 }
 
+static int
+NA_compare(SlopNAObject *v, SlopNAObject *w)
+{
+  log_NA_event("NA_compare");
+  return 0;
+}
+
 
 /* Arithmetic methods -- so we can override unary operators */
 static PyNumberMethods NA_as_number = {
@@ -270,7 +277,7 @@ PyTypeObject SlopNA_Type = {
   (printfunc)NA_print,			/* tp_print */
   (getattrfunc)NA_GetAttr,  /* tp_getattr */
   (setattrfunc)NA_SetAttr,  /* tp_setattr */
-  0,					/* tp_compare */
+  (cmpfunc)NA_compare,					/* tp_compare */
   (reprfunc)NA_repr,  /* tp_repr */
   &NA_as_number,      /* tp_as_number */
   &NA_as_sequence,    /* tp_as_sequence */

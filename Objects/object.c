@@ -4,6 +4,10 @@
 #include "Python.h"
 #include "frameobject.h"
 
+#include "slop.h" // pgbovine
+#include "NAobject.h" // pgbovine
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -945,6 +949,22 @@ PyObject_RichCompare(PyObject *v, PyObject *w, int op)
 	assert(Py_LT <= op && op <= Py_GE);
 	if (Py_EnterRecursiveCall(" in cmp"))
 		return NULL;
+
+
+  // pgbovine - as an arbitrary convention, always return False for NA comparisons
+  if (SlopNA_CheckExact(v)) {
+    log_NA_event("PyObject_RichCompare(NA,*)=False");
+    res = Py_False; 
+    Py_INCREF(res);
+    return res;
+  }
+  else if (SlopNA_CheckExact(w)) {
+    log_NA_event("PyObject_RichCompare(*,NA)=False");
+    res = Py_False; 
+    Py_INCREF(res);
+    return res;
+  }
+
 
 	/* If the types are equal, and not old-style instances, try to
 	   get out cheap (don't bother with coercions etc.). */
