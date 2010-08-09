@@ -2097,7 +2097,18 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
 			v = THIRD();   /* dict */
 			STACKADJ(-2);
 			assert (PyDict_CheckExact(v));
-			err = PyDict_SetItem(v, w, u);  /* v[w] = u */
+      // pgbovine - NOP if key or value are NA
+      if (SlopNA_CheckExact(w)) {
+        log_NA_event("STORE_MAP(key=NA)");
+        err = 0;
+      }
+      else if (SlopNA_CheckExact(u)) {
+        log_NA_event("STORE_MAP(value=NA)");
+        err = 0;
+      }
+      else {
+        err = PyDict_SetItem(v, w, u);  /* v[w] = u */
+      }
 			Py_DECREF(u);
 			Py_DECREF(w);
 			if (err == 0) continue;

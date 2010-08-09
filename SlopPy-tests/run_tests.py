@@ -57,6 +57,9 @@ def diff_test_output(test_name):
 def run_test(test_name, clobber_golden=False):
   print 'Testing', test_name
   assert test_name.endswith('.py')
+  outfile = test_name[:-3] + '.out'
+  if os.path.isfile(outfile):
+    os.remove(outfile)
 
   test_script = os.path.join(REGTEST_DIR, test_name)
   has_error = execute(test_script)
