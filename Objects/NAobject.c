@@ -224,6 +224,12 @@ NA_compare(SlopNAObject *v, SlopNAObject *w)
   return 0;
 }
 
+// all iteration attempts should IMMEDIATELY FAIL
+// (to prevent infinite loops in cases like "for x in <NA>:")
+static PyObject *NA_iternext(SlopNAObject *self) {
+  log_NA_event("NA_iternext");
+  return NULL;
+}
 
 /* Arithmetic methods -- so we can override unary operators */
 static PyNumberMethods NA_as_number = {
@@ -294,8 +300,8 @@ PyTypeObject SlopNA_Type = {
   0,					/* tp_clear */
   0,					/* tp_richcompare */
   0,					/* tp_weaklistoffset */
-  0,					/* tp_iter */
-  0,					/* tp_iternext */
+  PyObject_SelfIter, /* tp_iter */
+  (iternextfunc)NA_iternext, /* tp_iternext */
   0,					/* tp_methods */
   0,					/* tp_members */
   0,					/* tp_getset */
