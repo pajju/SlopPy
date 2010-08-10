@@ -3,3 +3,13 @@
   File "regression-tests/assert_with_arg.py", line 5, in foo
     assert x > 10, x
 }
+{NA <type 'exceptions.AssertionError'> AssertionError(5,)
+ Traceback (most recent call last):
+  File "regression-tests/assert_with_arg.py", line 5, in foo
+    assert x > 10, x
+}
+{NA <type 'exceptions.AssertionError'> AssertionError(5,)
+ Traceback (most recent call last):
+  File "regression-tests/assert_with_arg.py", line 5, in foo
+    assert x > 10, x
+}

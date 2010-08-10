@@ -2661,10 +2661,8 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
       // transitively in a parent function), then all exceptions will go
       // uncaught, so we will instead silence the exception and replace
       // it with a special "NA" value
-      // (EDIT: also don't try anything for certain 'weird' opcodes)
       if (why == WHY_EXCEPTION &&
-          !transitively_within_try_block() &&
-          (opcode != END_FINALLY)) {
+          !transitively_within_try_block()) {
         PyThreadState *tstate = PyThreadState_GET();
         PyObject* p_type = tstate->curexc_type;
         //PyObject_Print(p_type, stdout, 0); printf("\n");
@@ -2697,8 +2695,7 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
           assert(Py_REFCNT(x) == 1);
 
           // now figure out what to do with x on the stack ...
-          if (opcode == UNPACK_SEQUENCE ||
-              opcode == RAISE_VARARGS) {
+          if (opcode == UNPACK_SEQUENCE) {
             // push x on the stack oparg times
             int i;
             for (i = 0; i < oparg; i++) {
@@ -2710,7 +2707,8 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
           }
           // these opcodes only PUSH(x) on success
           else if (opcode == BUILD_TUPLE ||
-                   opcode == BUILD_LIST) {
+                   opcode == BUILD_LIST ||
+                   opcode == RAISE_VARARGS) {
             PUSH(x);
           }
           // these opcodes do an unconditional PUSH(x), so if there's an

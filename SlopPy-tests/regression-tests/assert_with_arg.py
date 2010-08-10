@@ -5,3 +5,5 @@ def foo():
   assert x > 10, x
 
 foo()
+foo()
+foo()
