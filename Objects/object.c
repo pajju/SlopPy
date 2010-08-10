@@ -956,13 +956,13 @@ PyObject_RichCompare(PyObject *v, PyObject *w, int op)
     log_NA_event("PyObject_RichCompare(NA,*)=False");
     res = Py_False; 
     Py_INCREF(res);
-    return res;
+    goto Done; // since we need to call Py_LeaveRecursiveCall!
   }
   else if (SlopNA_CheckExact(w)) {
     log_NA_event("PyObject_RichCompare(*,NA)=False");
     res = Py_False; 
     Py_INCREF(res);
-    return res;
+    goto Done; // since we need to call Py_LeaveRecursiveCall!
   }
 
 
