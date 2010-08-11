@@ -2,6 +2,8 @@
  Traceback (most recent call last):
   File "regression-tests/add_NA_to_dict.py", line 4, in <module>
     x = 1 / 0
+
+Locals: {'__builtins__': <module '__builtin__' (built-in)>, '__name__': '__main__', '__file__': 'regression-tests/add_NA_to_dict.py', '__doc__': None, '__package__': None}
 }
 {STORE_MAP(key=NA) | regression-tests/add_NA_to_dict.py <module>:8}
 {STORE_MAP(value=NA) | regression-tests/add_NA_to_dict.py <module>:9}

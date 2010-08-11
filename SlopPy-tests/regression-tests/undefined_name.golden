@@ -2,4 +2,6 @@
  Traceback (most recent call last):
   File "regression-tests/undefined_name.py", line 1, in <module>
     x = undefined_name
+
+Locals: {'__builtins__': <module '__builtin__' (built-in)>, '__name__': '__main__', '__file__': 'regression-tests/undefined_name.py', '__doc__': None, '__package__': None}
 }

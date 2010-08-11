@@ -20,13 +20,17 @@ NA_repr(SlopNAObject *self)
   PyObject* type_repr = PyObject_Repr(self->exc_type);
   PyObject* value_repr = PyObject_Repr(self->exc_value);
 
-  PyObject* repr = PyTuple_Pack(3, type_repr, value_repr, self->exc_traceback_str);
+  PyObject* cur_locals = PyEval_GetLocals();
+  PyObject* locals_repr = PyObject_Repr(cur_locals);
 
-  PyObject* fmt = PyString_FromString("{NA %s %s\n %s}");
+  PyObject* repr = PyTuple_Pack(4, type_repr, value_repr, self->exc_traceback_str, locals_repr);
+
+  PyObject* fmt = PyString_FromString("{NA %s %s\n %s\nLocals: %s\n}");
   PyObject* ret = PyString_Format(fmt, repr);
   Py_DECREF(fmt);
 
   Py_DECREF(repr);
+  Py_DECREF(locals_repr);
   Py_DECREF(value_repr);
   Py_DECREF(type_repr);
 

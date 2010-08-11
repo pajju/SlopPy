@@ -2,4 +2,6 @@
  Traceback (most recent call last):
   File "regression-tests/uncallable.py", line 2, in <module>
     x = s()
+
+Locals: {'__builtins__': <module '__builtin__' (built-in)>, '__file__': 'regression-tests/uncallable.py', '__package__': None, 's': 'hello', '__name__': '__main__', '__doc__': None}
 }

@@ -2,10 +2,14 @@
  Traceback (most recent call last):
   File "regression-tests/NA_iter.py", line 4, in <module>
     for line in open(NON_EXISTENT_FILENAME):
+
+Locals: {'__builtins__': <module '__builtin__' (built-in)>, '__name__': '__main__', '__file__': 'regression-tests/NA_iter.py', '__doc__': None, '__package__': None}
 }
 {NA <type 'exceptions.TypeError'> 'coercing to Unicode: need string or buffer, NA found'
  Traceback (most recent call last):
   File "regression-tests/NA_iter.py", line 4, in <module>
     for line in open(NON_EXISTENT_FILENAME):
+
+Locals: {'__builtins__': <module '__builtin__' (built-in)>, '__name__': '__main__', '__file__': 'regression-tests/NA_iter.py', '__doc__': None, '__package__': None}
 }
 {NA_iternext | regression-tests/NA_iter.py <module>:4}

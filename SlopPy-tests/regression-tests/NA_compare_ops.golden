@@ -2,6 +2,8 @@
  Traceback (most recent call last):
   File "regression-tests/NA_compare_ops.py", line 3, in <module>
     x = 1 / 0
+
+Locals: {'__builtins__': <module '__builtin__' (built-in)>, '__name__': '__main__', '__file__': 'regression-tests/NA_compare_ops.py', '__doc__': None, '__package__': None}
 }
 {PyObject_RichCompare(NA,*)=False | regression-tests/NA_compare_ops.py <module>:6}
 {PyObject_RichCompare(NA,*)=False | regression-tests/NA_compare_ops.py <module>:7}

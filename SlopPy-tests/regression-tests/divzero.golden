@@ -2,4 +2,6 @@
  Traceback (most recent call last):
   File "regression-tests/divzero.py", line 1, in <module>
     x = 1 / 0
+
+Locals: {'__builtins__': <module '__builtin__' (built-in)>, '__name__': '__main__', '__file__': 'regression-tests/divzero.py', '__doc__': None, '__package__': None}
 }

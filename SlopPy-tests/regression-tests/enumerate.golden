@@ -2,14 +2,20 @@
  Traceback (most recent call last):
   File "regression-tests/enumerate.py", line 32, in foo
     assert line == 'a', line
+
+Locals: {'i': 1, 'line': 'b'}
 }
 {NA <type 'exceptions.AssertionError'> AssertionError('c',)
  Traceback (most recent call last):
   File "regression-tests/enumerate.py", line 32, in foo
     assert line == 'a', line
+
+Locals: {'i': 2, 'line': 'c'}
 }
 {NA <type 'exceptions.AssertionError'> AssertionError('d',)
  Traceback (most recent call last):
   File "regression-tests/enumerate.py", line 32, in foo
     assert line == 'a', line
+
+Locals: {'i': 3, 'line': 'd'}
 }

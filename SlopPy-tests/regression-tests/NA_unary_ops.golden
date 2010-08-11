@@ -2,6 +2,8 @@
  Traceback (most recent call last):
   File "regression-tests/NA_unary_ops.py", line 3, in <module>
     x = 1 / 0
+
+Locals: {'__builtins__': <module '__builtin__' (built-in)>, '__name__': '__main__', '__file__': 'regression-tests/NA_unary_ops.py', '__doc__': None, '__package__': None}
 }
 {NA_unary | regression-tests/NA_unary_ops.py <module>:6}
 {NA_unary | regression-tests/NA_unary_ops.py <module>:7}

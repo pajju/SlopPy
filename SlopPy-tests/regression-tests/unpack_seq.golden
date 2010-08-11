@@ -2,4 +2,6 @@
  Traceback (most recent call last):
   File "regression-tests/unpack_seq.py", line 1, in <module>
     (x, y, z) = "hello,world".split(',')
+
+Locals: {'__builtins__': <module '__builtin__' (built-in)>, '__name__': '__main__', '__file__': 'regression-tests/unpack_seq.py', '__doc__': None, '__package__': None}
 }
