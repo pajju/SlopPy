@@ -1,0 +1,8 @@
+{NA <type 'exceptions.ValueError'> "invalid literal for int() with base 10: 'baaad'"
+ Traceback (most recent call last):
+  File "regression-tests/list_comp.py", line 5, in <module>
+    xs = [int(line) for line in lst]
+
+Locals: {'__builtins__': <module '__builtin__' (built-in)>, '__file__': 'regression-tests/list_comp.py', '__package__': None, '_[1]': [1, 2], 'lst': ['1', '2', 'baaad', '3', '4'], '__name__': '__main__', 'line': 'baaad', '__doc__': None}
+}
+{list.append(NA) | regression-tests/list_comp.py <module>:5}
