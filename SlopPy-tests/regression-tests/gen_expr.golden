@@ -1,0 +1,72 @@
+{NA <type 'exceptions.ValueError'> "invalid literal for int() with base 10: 'bad'"
+ Traceback (most recent call last):
+  File "regression-tests/gen_expr.py", line 4, in <module>
+    y = [20*int(x) for x in lst]
+
+Locals: {'__builtins__': <module '__builtin__' (built-in)>, '__file__': 'regression-tests/gen_expr.py', '__package__': None, '_[1]': [20, 40], 'lst': ['1', '2', 'bad', '3', 'bad2', 'bad3', 'bad4', '4'], 'x': 'bad', '__name__': '__main__', '__doc__': None}
+}
+{binary_op(*,NA) | regression-tests/gen_expr.py <module>:4}
+{list.append(NA) | regression-tests/gen_expr.py <module>:4}
+{NA <type 'exceptions.ValueError'> "invalid literal for int() with base 10: 'bad2'"
+ Traceback (most recent call last):
+  File "regression-tests/gen_expr.py", line 4, in <module>
+    y = [20*int(x) for x in lst]
+
+Locals: {'__builtins__': <module '__builtin__' (built-in)>, '__file__': 'regression-tests/gen_expr.py', '__package__': None, '_[1]': [20, 40, 60], 'lst': ['1', '2', 'bad', '3', 'bad2', 'bad3', 'bad4', '4'], 'x': 'bad2', '__name__': '__main__', '__doc__': None}
+}
+{binary_op(*,NA) | regression-tests/gen_expr.py <module>:4}
+{list.append(NA) | regression-tests/gen_expr.py <module>:4}
+{NA <type 'exceptions.ValueError'> "invalid literal for int() with base 10: 'bad3'"
+ Traceback (most recent call last):
+  File "regression-tests/gen_expr.py", line 4, in <module>
+    y = [20*int(x) for x in lst]
+
+Locals: {'__builtins__': <module '__builtin__' (built-in)>, '__file__': 'regression-tests/gen_expr.py', '__package__': None, '_[1]': [20, 40, 60], 'lst': ['1', '2', 'bad', '3', 'bad2', 'bad3', 'bad4', '4'], 'x': 'bad3', '__name__': '__main__', '__doc__': None}
+}
+{binary_op(*,NA) | regression-tests/gen_expr.py <module>:4}
+{list.append(NA) | regression-tests/gen_expr.py <module>:4}
+{NA <type 'exceptions.ValueError'> "invalid literal for int() with base 10: 'bad4'"
+ Traceback (most recent call last):
+  File "regression-tests/gen_expr.py", line 4, in <module>
+    y = [20*int(x) for x in lst]
+
+Locals: {'__builtins__': <module '__builtin__' (built-in)>, '__file__': 'regression-tests/gen_expr.py', '__package__': None, '_[1]': [20, 40, 60], 'lst': ['1', '2', 'bad', '3', 'bad2', 'bad3', 'bad4', '4'], 'x': 'bad4', '__name__': '__main__', '__doc__': None}
+}
+{binary_op(*,NA) | regression-tests/gen_expr.py <module>:4}
+{list.append(NA) | regression-tests/gen_expr.py <module>:4}
+{NA <type 'exceptions.ValueError'> "invalid literal for int() with base 10: 'bad'"
+ Traceback (most recent call last):
+  File "regression-tests/gen_expr.py", line 5, in <genexpr>
+    yg = (20*int(x) for x in lst)
+
+Locals: {'.0': <listiterator object at 0x461d20>, 'x': 'bad'}
+}
+{binary_op(*,NA) | regression-tests/gen_expr.py <genexpr>:5}
+{gen_iternext() yielded NA | regression-tests/gen_expr.py <module>:8}
+{NA <type 'exceptions.ValueError'> "invalid literal for int() with base 10: 'bad2'"
+ Traceback (most recent call last):
+  File "regression-tests/gen_expr.py", line 5, in <genexpr>
+    yg = (20*int(x) for x in lst)
+
+Locals: {'.0': <listiterator object at 0x461d20>, 'x': 'bad2'}
+}
+{binary_op(*,NA) | regression-tests/gen_expr.py <genexpr>:5}
+{gen_iternext() yielded NA | regression-tests/gen_expr.py <module>:8}
+{NA <type 'exceptions.ValueError'> "invalid literal for int() with base 10: 'bad3'"
+ Traceback (most recent call last):
+  File "regression-tests/gen_expr.py", line 5, in <genexpr>
+    yg = (20*int(x) for x in lst)
+
+Locals: {'.0': <listiterator object at 0x461d20>, 'x': 'bad3'}
+}
+{binary_op(*,NA) | regression-tests/gen_expr.py <genexpr>:5}
+{gen_iternext() yielded NA | regression-tests/gen_expr.py <module>:8}
+{NA <type 'exceptions.ValueError'> "invalid literal for int() with base 10: 'bad4'"
+ Traceback (most recent call last):
+  File "regression-tests/gen_expr.py", line 5, in <genexpr>
+    yg = (20*int(x) for x in lst)
+
+Locals: {'.0': <listiterator object at 0x461d20>, 'x': 'bad4'}
+}
+{binary_op(*,NA) | regression-tests/gen_expr.py <genexpr>:5}
+{gen_iternext() yielded NA | regression-tests/gen_expr.py <module>:8}

@@ -7,6 +7,8 @@
 #include "structmember.h"
 #include "opcode.h"
 
+#include "slop.h" // pgbovine
+
 static int
 gen_traverse(PyGenObject *gen, visitproc visit, void *arg)
 {
@@ -277,7 +279,17 @@ failed_throw:
 static PyObject *
 gen_iternext(PyGenObject *gen)
 {
-	return gen_send_ex(gen, NULL, 0);
+  // pgbovine - don't yield NA values
+  while (1) {
+    PyObject* ret = gen_send_ex(gen, NULL, 0);
+    if (ret && SlopNA_CheckExact(ret)) {
+      log_NA_event("gen_iternext() yielded NA");
+      continue;
+    }
+    else {
+      return ret;
+    }
+  }
 }
 
 
