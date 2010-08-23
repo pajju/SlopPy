@@ -1,0 +1,11 @@
+{NA <type 'exceptions.ZeroDivisionError'> 'integer division or modulo by zero'
+ Traceback (most recent call last):
+  File "regression-tests/NA_and.py", line 9, in <module>
+    x = 1 / 0
+
+Locals: {'__builtins__': <module '__builtin__' (built-in)>, '__name__': '__main__', '__file__': 'regression-tests/NA_and.py', '__doc__': ' \n  (NA and False) = False \n  (False and NA) = False\n\n  Sources: http://databases.about.com/cs/sql/a/aa042803a.htm\n           http://www.sqlite.org/nulls.html\n', '__package__': None}
+}
+{JUMP_IF_FALSE(NA) no jump | regression-tests/NA_and.py <module>:11}
+{JUMP_IF_FALSE(NA) no jump | regression-tests/NA_and.py <module>:14}
+{JUMP_IF_FALSE(NA) no jump | regression-tests/NA_and.py <module>:15}
+{JUMP_IF_FALSE(NA) no jump | regression-tests/NA_and.py <module>:15}

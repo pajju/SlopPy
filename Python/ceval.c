@@ -2243,13 +2243,19 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
 				JUMPBY(oparg);
 				goto fast_next_opcode;
 			}
-			err = PyObject_IsTrue(w);
-			if (err > 0)
-				err = 0;
-			else if (err == 0)
-				JUMPBY(oparg);
-			else
-				break;
+      if (SlopNA_CheckExact(w)) {
+        // NOP
+        log_NA_event("JUMP_IF_FALSE(NA) no jump");
+      }
+      else {
+        err = PyObject_IsTrue(w);
+        if (err > 0)
+          err = 0;
+        else if (err == 0)
+          JUMPBY(oparg);
+        else
+          break;
+      }
 			continue;
 
 		PREDICTED_WITH_ARG(JUMP_IF_TRUE);
@@ -2263,15 +2269,23 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
 				JUMPBY(oparg);
 				goto fast_next_opcode;
 			}
-			err = PyObject_IsTrue(w);
-			if (err > 0) {
-				err = 0;
-				JUMPBY(oparg);
-			}
-			else if (err == 0)
-				;
-			else
-				break;
+
+      // pgbovine - don't ever jump if w is NA
+      if (SlopNA_CheckExact(w)) {
+        // NOP
+        log_NA_event("JUMP_IF_TRUE(NA) no jump");
+      }
+      else {
+        err = PyObject_IsTrue(w);
+        if (err > 0) {
+          err = 0;
+          JUMPBY(oparg);
+        }
+        else if (err == 0)
+          ;
+        else
+          break;
+      }
 			continue;
 
 		PREDICTED_WITH_ARG(JUMP_ABSOLUTE);
