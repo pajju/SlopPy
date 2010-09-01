@@ -3,36 +3,36 @@
 x = 1 / 0
 assert type(x) is NA
 
-assert x + 5 is x
-assert 5 + x is x
+assert type(x + 5) is NA
+assert type(5 + x) is NA
 
-assert x - 5 is x
-assert 5 - x is x
+assert type(x - 5) is NA
+assert type(5 - x) is NA
 
-assert x * 5 is x
-assert 5 * x is x
+assert type(x * 5) is NA
+assert type(5 * x) is NA
 
-assert x / 5 is x
-assert 5 / x is x
+assert type(x / 5) is NA
+assert type(5 / x) is NA
 
-assert x // 5 is x
-assert 5 // x is x
+assert type(x // 5) is NA
+assert type(5 // x) is NA
 
-assert x % 5 is x
-assert 5 % x is x
+assert type(x % 5) is NA
+assert type(5 % x) is NA
 
-assert x << 5 is x
-assert 5 << x is x
+assert type(x << 5) is NA
+assert type(5 << x) is NA
 
-assert x >> 5 is x
-assert 5 >> x is x
+assert type(x >> 5) is NA
+assert type(5 >> x) is NA
 
-assert x & 5 is x
-assert 5 & x is x
+assert type(x & 5) is NA
+assert type(5 & x) is NA
 
-assert x ^ 5 is x
-assert 5 ^ x is x
+assert type(x ^ 5) is NA
+assert type(5 ^ x) is NA
 
-assert x | 5 is x
-assert 5 | x is x
+assert type(x | 5) is NA
+assert type(5 | x) is NA
 

@@ -3,8 +3,8 @@
 x = 1 / 0
 assert type(x) is NA
 
-assert pow(x, 2) is x
-assert pow(2, x) is x
-assert x ** 2 is x
-assert 2 ** x is x
+assert type(pow(x, 2)) is NA
+assert type(pow(2, x)) is NA
+assert type(x ** 2) is NA
+assert type(2 ** x) is NA
 

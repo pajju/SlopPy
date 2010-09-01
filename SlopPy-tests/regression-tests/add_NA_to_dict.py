@@ -18,7 +18,7 @@ assert len(d) == 0
 d.update({x:1})
 assert len(d) == 0
 y = d.setdefault('unknown', x)
-assert y is x
+assert type(y) is NA
 assert len(d) == 0
 
 assert dict(key1=x) == {}

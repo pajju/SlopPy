@@ -8,5 +8,6 @@ Locals: {'__builtins__': <module '__builtin__' (built-in)>, '__name__': '__main_
 {NA_GetAttr | regression-tests/NA_misc_ops.py <module>:6}
 {NA_subscript | regression-tests/NA_misc_ops.py <module>:8}
 {NA_slice | regression-tests/NA_misc_ops.py <module>:10}
+{COMPARE_OP(*, NA) | regression-tests/NA_misc_ops.py <module>:13}
 {NA_call | regression-tests/NA_misc_ops.py <module>:14}
 {NA_call | regression-tests/NA_misc_ops.py <module>:15}

@@ -2148,7 +2148,20 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
 			}
 			else {
 			  slow_compare:
-				x = cmp_outcome(oparg, v, w);
+        // pgbovine - if v or w is NA, then simply return NA
+        if (SlopNA_CheckExact(v)) {
+          x = v;
+          Py_INCREF(v);
+          log_NA_event("COMPARE_OP(NA, *)");
+        }
+        else if (SlopNA_CheckExact(w)) {
+          x = w;
+          Py_INCREF(w);
+          log_NA_event("COMPARE_OP(*, NA)");
+        }
+        else {
+          x = cmp_outcome(oparg, v, w);
+        }
 			}
 			Py_DECREF(v);
 			Py_DECREF(w);
@@ -2733,6 +2746,9 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
                    opcode == CALL_FUNCTION_KW ||
                    opcode == CALL_FUNCTION_VAR_KW) {
             SET_TOP(x);
+          }
+          else if (opcode == END_FINALLY) {
+            // don't do anything since we don't need to push anything onto stack
           }
           else {
             int action = get_NA_stack_action(opcode);

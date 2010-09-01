@@ -5,9 +5,17 @@
 
 Locals: {'__builtins__': <module '__builtin__' (built-in)>, '__name__': '__main__', '__file__': 'regression-tests/NA_compare_ops.py', '__doc__': None, '__package__': None}
 }
-{PyObject_RichCompare(NA,*)=False | regression-tests/NA_compare_ops.py <module>:6}
-{PyObject_RichCompare(NA,*)=False | regression-tests/NA_compare_ops.py <module>:7}
-{PyObject_RichCompare(NA,*)=False | regression-tests/NA_compare_ops.py <module>:8}
-{PyObject_RichCompare(NA,*)=False | regression-tests/NA_compare_ops.py <module>:9}
-{PyObject_RichCompare(NA,*)=False | regression-tests/NA_compare_ops.py <module>:10}
-{PyObject_RichCompare(NA,*)=False | regression-tests/NA_compare_ops.py <module>:11}
+{COMPARE_OP(NA, *) | regression-tests/NA_compare_ops.py <module>:6}
+{COMPARE_OP(*, NA) | regression-tests/NA_compare_ops.py <module>:7}
+{COMPARE_OP(NA, *) | regression-tests/NA_compare_ops.py <module>:8}
+{COMPARE_OP(*, NA) | regression-tests/NA_compare_ops.py <module>:9}
+{COMPARE_OP(NA, *) | regression-tests/NA_compare_ops.py <module>:10}
+{COMPARE_OP(*, NA) | regression-tests/NA_compare_ops.py <module>:11}
+{COMPARE_OP(NA, *) | regression-tests/NA_compare_ops.py <module>:12}
+{COMPARE_OP(*, NA) | regression-tests/NA_compare_ops.py <module>:13}
+{COMPARE_OP(NA, *) | regression-tests/NA_compare_ops.py <module>:14}
+{COMPARE_OP(*, NA) | regression-tests/NA_compare_ops.py <module>:15}
+{COMPARE_OP(NA, *) | regression-tests/NA_compare_ops.py <module>:16}
+{COMPARE_OP(*, NA) | regression-tests/NA_compare_ops.py <module>:17}
+{COMPARE_OP(*, NA) | regression-tests/NA_compare_ops.py <module>:18}
+{COMPARE_OP(NA, *) | regression-tests/NA_compare_ops.py <module>:19}

@@ -1,12 +1,12 @@
-/* 
+/*
 
    SlopPy: A Python interpreter that facilitates sloppy, error-tolerant
    data parsing and analysis
-  
+
    Copyright 2010 Philip J. Guo (pg@cs.stanford.edu). All rights reserved.
 
    This code carries the same license as the enclosing Python
-   distribution: http://www.python.org/psf/license/ 
+   distribution: http://www.python.org/psf/license/
 
 */
 
@@ -221,13 +221,6 @@ static long NA_hash(SlopNAObject *a) {
   return PyObject_Hash(a->exc_traceback_str);
 }
 
-static int
-NA_compare(SlopNAObject *v, SlopNAObject *w)
-{
-  log_NA_event("NA_compare");
-  return 0;
-}
-
 // all iteration attempts should IMMEDIATELY FAIL
 // (to prevent infinite loops in cases like "for x in <NA>:")
 static PyObject *NA_iternext(SlopNAObject *self) {
@@ -287,7 +280,7 @@ PyTypeObject SlopNA_Type = {
   (printfunc)NA_print,			/* tp_print */
   (getattrfunc)NA_GetAttr,  /* tp_getattr */
   (setattrfunc)NA_SetAttr,  /* tp_setattr */
-  (cmpfunc)NA_compare,					/* tp_compare */
+  0,          /* tp_compare */
   (reprfunc)NA_repr,  /* tp_repr */
   &NA_as_number,      /* tp_as_number */
   &NA_as_sequence,    /* tp_as_sequence */

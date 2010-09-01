@@ -1,0 +1,21 @@
+{NA <type 'exceptions.Exception'> Exception()
+ Traceback (most recent call last):
+  File "regression-tests/end_finally.py", line 8, in foo
+    raise Exception
+
+Locals: {}
+}
+{NA <type 'exceptions.Exception'> Exception()
+ Traceback (most recent call last):
+  File "regression-tests/end_finally.py", line 8, in foo
+    raise Exception
+
+Locals: {}
+}
+{NA <type 'exceptions.Exception'> Exception()
+ Traceback (most recent call last):
+  File "regression-tests/end_finally.py", line 8, in foo
+    raise Exception
+
+Locals: {}
+}
