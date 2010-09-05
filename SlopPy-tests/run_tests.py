@@ -56,8 +56,8 @@ def diff_test_output(test_name):
   golden_s = open(golden_file).readlines()
   out_s = open(outfile).readlines()
 
-  golden_s_filtered = [re.sub(' 0x.+>', ' 0xADDR>', e) for e in golden_s]
-  out_s_filtered = [re.sub(' 0x.+>', ' 0xADDR>', e) for e in out_s]
+  golden_s_filtered = [re.sub(' 0x.+?>', ' 0xADDR>', e) for e in golden_s]
+  out_s_filtered = [re.sub(' 0x.+?>', ' 0xADDR>', e) for e in out_s]
 
   for line in difflib.unified_diff(golden_s_filtered, out_s_filtered, \
                                    fromfile=golden_file, tofile=outfile):
