@@ -39,9 +39,9 @@ def diff_test_golden_data(golden_file):
 
   # filter out machine-specific memory addresses:
   outfile_filtered = \
-    [re.sub(' 0x.+>', ' 0xADDR>', e) for e in open(outfile).readlines()]
+    [re.sub(' 0x.+?>', ' 0xADDR>', e) for e in open(outfile).readlines()]
   golden_file_filtered = \
-    [re.sub(' 0x.+>', ' 0xADDR>', e) for e in open(golden_file).readlines()]
+    [re.sub(' 0x.+?>', ' 0xADDR>', e) for e in open(golden_file).readlines()]
 
   return outfile_filtered != golden_file_filtered
 
