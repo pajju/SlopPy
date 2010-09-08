@@ -24,6 +24,7 @@ Locals: {'y': 60, 'x': 'bad2', 'l': ['1', '2', 'bad', '3', 'bad2', 'bad3', 'bad4
 
 Locals: {'y': 60, 'x': 'bad3', 'l': ['1', '2', 'bad', '3', 'bad2', 'bad3', 'bad4', '4']}
 }
+{PyObject_SetItem(value=NA) | regression-tests/gen_func.py foo:9}
 {binary_op(*,NA) | regression-tests/gen_func.py foo:9}
 {gen_iternext() yielded NA | regression-tests/gen_func.py <module>:13}
 {PyObject_SetItem(value=NA) | regression-tests/gen_func.py foo:9}
@@ -34,5 +35,6 @@ Locals: {'y': 60, 'x': 'bad3', 'l': ['1', '2', 'bad', '3', 'bad2', 'bad3', 'bad4
 
 Locals: {'y': 60, 'x': 'bad4', 'l': ['1', '2', 'bad', '3', 'bad2', 'bad3', 'bad4', '4']}
 }
+{PyObject_SetItem(value=NA) | regression-tests/gen_func.py foo:9}
 {binary_op(*,NA) | regression-tests/gen_func.py foo:9}
 {gen_iternext() yielded NA | regression-tests/gen_func.py <module>:13}
