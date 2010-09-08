@@ -39,9 +39,9 @@ def diff_test_golden_data(golden_file):
 
   # filter out machine-specific memory addresses:
   outfile_filtered = \
-    [re.sub(' 0x.+>', ' 0xADDR>', e) for e in open(outfile).readlines()]
+    [re.sub(' 0x.+?>', ' 0xADDR>', e) for e in open(outfile).readlines()]
   golden_file_filtered = \
-    [re.sub(' 0x.+>', ' 0xADDR>', e) for e in open(golden_file).readlines()]
+    [re.sub(' 0x.+?>', ' 0xADDR>', e) for e in open(golden_file).readlines()]
 
   return outfile_filtered != golden_file_filtered
 
@@ -56,8 +56,8 @@ def diff_test_output(test_name):
   golden_s = open(golden_file).readlines()
   out_s = open(outfile).readlines()
 
-  golden_s_filtered = [re.sub(' 0x.+>', ' 0xADDR>', e) for e in golden_s]
-  out_s_filtered = [re.sub(' 0x.+>', ' 0xADDR>', e) for e in out_s]
+  golden_s_filtered = [re.sub(' 0x.+?>', ' 0xADDR>', e) for e in golden_s]
+  out_s_filtered = [re.sub(' 0x.+?>', ' 0xADDR>', e) for e in out_s]
 
   for line in difflib.unified_diff(golden_s_filtered, out_s_filtered, \
                                    fromfile=golden_file, tofile=outfile):
