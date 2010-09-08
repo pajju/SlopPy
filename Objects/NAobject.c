@@ -15,7 +15,7 @@
 #include "cStringIO.h"
 
 static PyObject *
-NA_repr(SlopNAObject *self)
+NA_detailed_repr(SlopNAObject *self)
 {
   PyObject* type_repr = PyObject_Repr(self->exc_type);
   PyObject* value_repr = PyObject_Repr(self->exc_value);
@@ -37,18 +37,22 @@ NA_repr(SlopNAObject *self)
   return ret;
 }
 
-static int
-NA_print(SlopNAObject *self, FILE *fp, int flags)
+// keep this simple so that print(x) and str(x) are concise if x is NA
+static PyObject *
+NA_repr(SlopNAObject *self)
 {
-  // don't try to print anything fancy or else the interpreter might
-  // croak with an error like this:
-  //   Fatal Python error: PyThreadState_Get: no current thread
-  //
-  // use str() or repr() to get more details
-	Py_BEGIN_ALLOW_THREADS
-	fputs("<NA>", fp);
-	Py_END_ALLOW_THREADS
-	return 0;
+  PyObject* type_repr = PyObject_Repr(self->exc_type);
+
+  PyObject* repr = PyTuple_Pack(1, type_repr);
+
+  PyObject* fmt = PyString_FromString("<NA %s>");
+  PyObject* ret = PyString_Format(fmt, repr);
+  Py_DECREF(fmt);
+
+  Py_DECREF(repr);
+  Py_DECREF(type_repr);
+
+  return ret;
 }
 
 
@@ -101,7 +105,7 @@ PyObject* SlopNA_New(PyObject* exc_type, PyObject* exc_value, PyObject* exc_trac
   self->next_NA = NULL;
 
   // log this creation event:
-  PyObject* repr = NA_repr(self);
+  PyObject* repr = NA_detailed_repr(self);
   PG_LOG(PyString_AsString(repr));
   Py_DECREF(repr);
 
@@ -277,7 +281,7 @@ PyTypeObject SlopNA_Type = {
   sizeof(SlopNAObject),
   0,
   (destructor)NA_dealloc,		/* tp_dealloc */
-  (printfunc)NA_print,			/* tp_print */
+  0,			/* tp_print */
   (getattrfunc)NA_GetAttr,  /* tp_getattr */
   (setattrfunc)NA_SetAttr,  /* tp_setattr */
   0,          /* tp_compare */
