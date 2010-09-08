@@ -1,0 +1,30 @@
+{NA <class 'sgmllib.SGMLParseError'> SGMLParseError("unexpected '\\xa9' char in declaration",)
+ Traceback (most recent call last):
+  File "regression-tests/html_parse.py", line 15, in parse
+    self.feed(s)
+  File "/Users/pgbovine/SlopPy/Lib/sgmllib.py", line 104, in feed
+    self.goahead(0)
+  File "/Users/pgbovine/SlopPy/Lib/sgmllib.py", line 174, in goahead
+    k = self.parse_declaration(i)
+  File "/Users/pgbovine/SlopPy/Lib/markupbase.py", line 136, in parse_declaration
+    "unexpected %r char in declaration" % rawdata[j])
+  File "/Users/pgbovine/SlopPy/Lib/sgmllib.py", line 111, in error
+    raise SGMLParseError(message)
+
+Locals: {'s': '<!all images and information herewithin are \xa9 caltech digital media center 2004>\r<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\r<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\r<head>\r<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />\r<title>caltech digital media center</title>\r</head>\r<body bgcolor="#ffffff">\r<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=4,0,0,0" width="80" height="80">\r<param name="movie" value="flash_detection.swf?flashContentURL=index_content.html&altContentURL=index_alternate.html&contentVersion=7&contentMajorRevision=0&contentMinorRevision=0&allowFlashAutoInstall=false" />\r<param name="quality" value="low" />\r<embed src="flash_detection.swf?flashContentURL=index_content.html&altContentURL=index_alternate.html&contentVersion=7&contentMajorRevision=0&contentMinorRevision=0&allowFlashAutoInstall=false" quality="low" pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" type="application/x-shockwave-flash" width="80" height="80" />\r</object>\r</body>\r</html>\r', 'self': <__main__.MyParser instance at 0x3a0738>}
+}
+{NA <class 'sgmllib.SGMLParseError'> SGMLParseError("unexpected '\\xa9' char in declaration",)
+ Traceback (most recent call last):
+  File "regression-tests/html_parse.py", line 16, in parse
+    self.close()
+  File "/Users/pgbovine/SlopPy/Lib/sgmllib.py", line 108, in close
+    self.goahead(1)
+  File "/Users/pgbovine/SlopPy/Lib/sgmllib.py", line 174, in goahead
+    k = self.parse_declaration(i)
+  File "/Users/pgbovine/SlopPy/Lib/markupbase.py", line 136, in parse_declaration
+    "unexpected %r char in declaration" % rawdata[j])
+  File "/Users/pgbovine/SlopPy/Lib/sgmllib.py", line 111, in error
+    raise SGMLParseError(message)
+
+Locals: {'s': '<!all images and information herewithin are \xa9 caltech digital media center 2004>\r<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\r<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\r<head>\r<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />\r<title>caltech digital media center</title>\r</head>\r<body bgcolor="#ffffff">\r<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=4,0,0,0" width="80" height="80">\r<param name="movie" value="flash_detection.swf?flashContentURL=index_content.html&altContentURL=index_alternate.html&contentVersion=7&contentMajorRevision=0&contentMinorRevision=0&allowFlashAutoInstall=false" />\r<param name="quality" value="low" />\r<embed src="flash_detection.swf?flashContentURL=index_content.html&altContentURL=index_alternate.html&contentVersion=7&contentMajorRevision=0&contentMinorRevision=0&allowFlashAutoInstall=false" quality="low" pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" type="application/x-shockwave-flash" width="80" height="80" />\r</object>\r</body>\r</html>\r', 'self': <__main__.MyParser instance at 0x3a0738>}
+}

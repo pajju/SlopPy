@@ -2689,7 +2689,9 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
       // uncaught, so we will instead silence the exception and replace
       // it with a special "NA" value
       if (why == WHY_EXCEPTION &&
-          !transitively_within_try_block()) {
+          !transitively_within_try_block() &&
+          (strncmp(PyString_AsString(f->f_code->co_filename),
+                   "/Users/pgbovine/SlopPy/Lib/", 27) != 0)) {
         PyThreadState *tstate = PyThreadState_GET();
         PyObject* p_type = tstate->curexc_type;
         //PyObject_Print(p_type, stdout, 0); printf("\n");
