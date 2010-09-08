@@ -104,10 +104,65 @@ PyObject* SlopNA_New(PyObject* exc_type, PyObject* exc_value, PyObject* exc_trac
 
   self->next_NA = NULL;
 
-  // log this creation event:
+  // log this creation event in both verbose and binary logs:
+
+  // for verbose log:
   PyObject* repr = NA_detailed_repr(self);
   PG_LOG(PyString_AsString(repr));
   Py_DECREF(repr);
+
+
+  // for binary log, each line is:
+  //   base64.b64encode(cPickle.dumps(context, -1))
+  //
+  // where context is a dict with the following fields:
+  //   exc_type, exc_value, locals
+  PyObject* context = PyDict_New();
+
+  PyObject* type_repr = PyObject_Repr(self->exc_type);
+  PyObject* value_repr = PyObject_Repr(self->exc_value);
+
+  PyDict_SetItemString(context, "exc_type", type_repr);
+  PyDict_SetItemString(context, "exc_value", value_repr);
+  PyDict_SetItemString(context, "locals", PyEval_GetLocals());
+
+  // pass in -1 to force cPickle to use a binary protocol
+  PyObject* negative_one = PyInt_FromLong(-1);
+  PyObject* pickled_context =
+      PyObject_CallFunctionObjArgs(cPickle_dumpstr_func,
+                                   context, negative_one, NULL);
+
+  if (!pickled_context) {
+    assert(PyErr_Occurred());
+    PyErr_Clear();
+
+    // hmmm, let's try removing locals and seeing if it's now picklable
+    PyDict_DelItemString(context, "locals");
+
+    pickled_context =
+      PyObject_CallFunctionObjArgs(cPickle_dumpstr_func,
+                                   context, negative_one, NULL);
+  }
+
+  if (!pickled_context) {
+    assert(PyErr_Occurred());
+    PyErr_Clear();
+
+    fprintf(stderr, "ERROR: pickled_context is unpicklable\n");
+    Py_Exit(1);
+  }
+
+  PyObject* encoded_line =
+    PyObject_CallFunctionObjArgs(b64encode_func, pickled_context, NULL);
+
+  fprintf(binary_log_file, "%s\n", PyString_AsString(encoded_line));
+
+  Py_DECREF(encoded_line);
+  Py_DECREF(negative_one);
+  Py_DECREF(context);
+  Py_DECREF(value_repr);
+  Py_DECREF(type_repr);
+
 
   return (PyObject*)self;
 }

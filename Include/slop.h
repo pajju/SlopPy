@@ -40,6 +40,10 @@ void pg_finalize(void);
 
 // initialize in pg_initialize(), destroy in pg_finalize()
 FILE* verbose_log_file;
+FILE* binary_log_file;
+
+PyObject* cPickle_dumpstr_func;
+PyObject* b64encode_func;
 
 void log_NA_event(const char* event_name);
 

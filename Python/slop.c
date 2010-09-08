@@ -20,11 +20,11 @@
 int pg_activated = 0;
 
 FILE* verbose_log_file = NULL;
+FILE* binary_log_file = NULL;
 
 // References to Python standard library functions:
-PyObject* cPickle_load_func = NULL;           // cPickle.load
-PyObject* cPickle_dumpstr_func = NULL;        // cPickle.dumps
-PyObject* cPickle_dump_func = NULL;           // cPickle.dump
+PyObject* cPickle_dumpstr_func = NULL;     // cPickle.dumps
+PyObject* b64encode_func = NULL;           // base64.b64encode
 
 
 // are we currently within a 'try' block (even transitively for ANY
@@ -382,10 +382,6 @@ void pg_initialize(void) {
 
   assert(!pg_activated);
 
-  // don't need this yet ...
-
-  /*
-
   // import some useful Python modules, so that we can call their functions:
   PyObject* cPickle_module = PyImport_ImportModule("cPickle"); // increments refcount
 
@@ -399,19 +395,22 @@ void pg_initialize(void) {
   }
 
   assert(cPickle_module);
-  cPickle_dump_func = PyObject_GetAttrString(cPickle_module, "dump");
   cPickle_dumpstr_func = PyObject_GetAttrString(cPickle_module, "dumps");
-  cPickle_load_func = PyObject_GetAttrString(cPickle_module, "load");
+  assert(cPickle_dumpstr_func);
   Py_DECREF(cPickle_module);
 
-  assert(cPickle_dump_func);
-  assert(cPickle_dumpstr_func);
-  assert(cPickle_load_func);
+  PyObject* base64_module = PyImport_ImportModule("base64"); // increments refcount
+  b64encode_func = PyObject_GetAttrString(base64_module, "b64encode");
+  assert(b64encode_func);
+  Py_DECREF(base64_module);
 
-  */
-
+  if (!base64_module) {
+    fprintf(stderr, "WARNING: base64 module doesn't yet exist, so SlopPy features not activated.\n");
+    return;
+  }
 
   verbose_log_file = fopen("slop_verbose.log", "w");
+  binary_log_file = fopen("slop_binary.log", "w");
 
   pg_activated = 1;
 }
@@ -429,8 +428,14 @@ void pg_finalize(void) {
   // turn this off ASAP
   pg_activated = 0;
 
+  Py_CLEAR(cPickle_dumpstr_func);
+  Py_CLEAR(b64encode_func);
+
   fclose(verbose_log_file);
   verbose_log_file = NULL;
+
+  fclose(binary_log_file);
+  binary_log_file = NULL;
 }
 
 
