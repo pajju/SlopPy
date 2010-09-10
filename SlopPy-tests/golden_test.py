@@ -43,7 +43,7 @@ def clobber_golden_file(golden_file):
 
 
 # returns True if there is a diff, False otherwise
-def diff_test_golden_data(golden_file):
+def golden_differs_from_out(golden_file):
   (base, ext) = os.path.splitext(golden_file)
   outfile = base + '.out'
   assert os.path.isfile(outfile)
@@ -72,8 +72,12 @@ def diff_test_output(test_name):
   golden_s_filtered = filter_output(golden_s)
   out_s_filtered = filter_output(out_s)
 
+  first_line = True
   for line in difflib.unified_diff(golden_s_filtered, out_s_filtered, \
                                    fromfile=golden_file, tofile=outfile):
+    if first_line:
+      print # print an extra line to ease readability
+      first_line = False
     print line,
 
 
@@ -95,7 +99,7 @@ def run_test(input_filename, clobber_golden=False):
 
   golden_file = os.path.join(TEST_DIR, base + '.golden')
   if os.path.isfile(golden_file):
-    if diff_test_golden_data(golden_file):
+    if golden_differs_from_out(golden_file):
       print "  FAILED"
     if clobber_golden:
       clobber_golden_file(golden_file)
@@ -109,7 +113,6 @@ def run_all_tests(clobber=False):
 
 def diff_all_test_outputs():
   for t in ALL_TESTS:
-    print '=== diffing', t, '==='
     diff_test_output(t)
 
 
