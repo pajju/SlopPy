@@ -1,3 +1,5 @@
+# THIS FILE IS DEPRECATED --- use golden_test.py instead
+
 # run SlopPy regression test suite
 
 import os, sys, re, shutil, filecmp, optparse, difflib

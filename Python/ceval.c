@@ -793,6 +793,21 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
 	assert(stack_pointer != NULL);
 	f->f_stacktop = NULL;	/* remains NULL unless yield suspends frame */
 
+
+  // pgbovine - each entry contains the offset (ID) of the instruction
+  // that most recently did a LOAD_FAST on the local var.  this array
+  // is indexed in the same way as fastlocals (e.g., using GETLOCAL)
+  //
+  // (using a fixed-size buffer is fast but brittle ... will overflow if
+  // a function has more than a fixed number of locals)
+  int locals_last_loaded_instr[150];
+
+  // Set to sentinel value of -1 (0 is a legal instruction offset):
+  // Optimization: we only need to clear the first co->co_nlocals entries,
+  // not ALL the entries, since we will only index up to co_nlocals ;)
+  memset(locals_last_loaded_instr, -1, co->co_nlocals * sizeof(int));
+
+
 #ifdef LLTRACE
 	lltrace = PyDict_GetItemString(f->f_globals, "__lltrace__") != NULL;
 #endif
@@ -968,6 +983,10 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
 			if (x != NULL) {
 				Py_INCREF(x);
 				PUSH(x);
+
+        // pgbovine - this should be fast!
+        locals_last_loaded_instr[oparg] = f->f_lasti;
+
 				goto fast_next_opcode;
 			}
 			format_exc_check_arg(PyExc_UnboundLocalError,
@@ -2768,18 +2787,41 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
             }
           }
 
-          // special handling for AssertionError ...
-          // taint ALL locals as NA since if you violate an assertion,
-          // then all bets are off as to the program's current state.
+          // special handling for AssertionError:
+          // taint as NA all locals loaded using LOAD_FAST on an instruction
+          // at the SAME SOURCE CODE LINE as this assertion
           //
-          // TODO: possible future refinement ... only taint those
-          // locals that were loaded on the SAME LINE as the assertion
-          // was raised
+          // Note that this is more precise than tainting ALL locals as
+          // NA, since we assume that only locals directly involved in
+          // an assertion need to be tainted
           if (p_type == PyExc_AssertionError) {
             int i;
+
+            // stolen from frame_getlineno in Objects/frameobject.c
+            int cur_lineno;
+            if (f->f_trace)
+              cur_lineno = f->f_lineno;
+            else
+              cur_lineno = PyCode_Addr2Line(f->f_code, f->f_lasti);
+
             for (i = 0; i < co->co_nlocals; i++) {
-              Py_INCREF(x);
-              SETLOCAL(i, x);
+              // -1 sentinel value means that it wasn't loaded:
+              if (locals_last_loaded_instr[i] >= 0) {
+                int load_fast_lineno =
+                  PyCode_Addr2Line(f->f_code, locals_last_loaded_instr[i]);
+
+                if (load_fast_lineno == cur_lineno) {
+                  Py_INCREF(x);
+                  SETLOCAL(i, x);
+
+                  PG_LOG_PRINTF(
+                    "{AssertionError: Set local var '%s' to NA | %s %s:%d}\n",
+                    PyString_AS_STRING(PyTuple_GET_ITEM(co->co_varnames, i)),
+                    PyString_AsString(f->f_code->co_filename),
+                    PyString_AsString(f->f_code->co_name),
+                    cur_lineno);
+                }
+              }
             }
           }
 
