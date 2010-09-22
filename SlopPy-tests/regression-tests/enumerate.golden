@@ -5,6 +5,7 @@
 
 Locals: {'i': 1, 'line': 'b'}
 }
+{AssertionError: Set local var 'line' to NA | regression-tests/enumerate.py foo:32}
 {NA <type 'exceptions.AssertionError'> AssertionError('c',)
  Traceback (most recent call last):
   File "regression-tests/enumerate.py", line 32, in foo
@@ -12,6 +13,7 @@ Locals: {'i': 1, 'line': 'b'}
 
 Locals: {'i': 2, 'line': 'c'}
 }
+{AssertionError: Set local var 'line' to NA | regression-tests/enumerate.py foo:32}
 {NA <type 'exceptions.AssertionError'> AssertionError('d',)
  Traceback (most recent call last):
   File "regression-tests/enumerate.py", line 32, in foo
@@ -19,3 +21,4 @@ Locals: {'i': 2, 'line': 'c'}
 
 Locals: {'i': 3, 'line': 'd'}
 }
+{AssertionError: Set local var 'line' to NA | regression-tests/enumerate.py foo:32}

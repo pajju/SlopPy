@@ -5,6 +5,7 @@
 
 Locals: {'x': 5}
 }
+{AssertionError: Set local var 'x' to NA | regression-tests/assert_with_arg.py foo:5}
 {NA <type 'exceptions.AssertionError'> AssertionError(5,)
  Traceback (most recent call last):
   File "regression-tests/assert_with_arg.py", line 5, in foo
@@ -12,6 +13,7 @@ Locals: {'x': 5}
 
 Locals: {'x': 5}
 }
+{AssertionError: Set local var 'x' to NA | regression-tests/assert_with_arg.py foo:5}
 {NA <type 'exceptions.AssertionError'> AssertionError(5,)
  Traceback (most recent call last):
   File "regression-tests/assert_with_arg.py", line 5, in foo
@@ -19,3 +21,4 @@ Locals: {'x': 5}
 
 Locals: {'x': 5}
 }
+{AssertionError: Set local var 'x' to NA | regression-tests/assert_with_arg.py foo:5}

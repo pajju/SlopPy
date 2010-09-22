@@ -1,0 +1,16 @@
+{NA <type 'exceptions.AssertionError'> AssertionError()
+ Traceback (most recent call last):
+  File "regression-tests/assert_test.py", line 5, in foo
+    assert(ratio < 1.0)
+
+Locals: {'tokens': ['4', '2'], 'line': '4 2', 'ratio': 2.0}
+}
+{AssertionError: Set local var 'ratio' to NA | regression-tests/assert_test.py foo:5}
+{NA <type 'exceptions.AssertionError'> AssertionError()
+ Traceback (most recent call last):
+  File "regression-tests/assert_test.py", line 5, in foo
+    assert(ratio < 1.0)
+
+Locals: {'tokens': ['8', '2'], 'line': '8 2', 'ratio': 4.0}
+}
+{AssertionError: Set local var 'ratio' to NA | regression-tests/assert_test.py foo:5}
