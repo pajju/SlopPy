@@ -2301,6 +2301,7 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
 
         if (x && SlopNA_CheckExact(x)) {
           log_NA_event("iterator skipped over NA");
+          Py_DECREF(x); // to prevent memory leaks
         }
         else {
           break;
