@@ -9,7 +9,7 @@ assert type(x[42]) is NA
 x[42] = 5
 assert type(x[1:5]) is NA
 x[1:5] = 5
-assert len(x) == 1
+assert len(x) == 0
 assert type('foo' in x) is NA
 assert type(x()) is NA
 assert type(x(1,2,3)) is NA

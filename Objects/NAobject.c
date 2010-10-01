@@ -208,8 +208,10 @@ static PyObject* NA_slice(SlopNAObject* self, Py_ssize_t ilow, Py_ssize_t ihigh)
   return (PyObject*)alias(self);
 }
 
+// if we return 0 for length, then it prevents nonsensical
+// infinite loops in built-in functions like dir()
 static Py_ssize_t NA_length(SlopNAObject* self) {
-  return 1;
+  return 0;
 }
 
 static PyObject* NA_concat(SlopNAObject *a, PyObject *bb) {
