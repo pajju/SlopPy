@@ -10,10 +10,6 @@
 #include "Python.h"
 #include "structmember.h"
 
-#include "NAobject.h" // pgbovine
-#include "slop.h" // pgbovine
-
-
 /* Set a key error with the specified argument, wrapping it in a
  * tuple automatically so that tuple keys are not unpacked as the
  * exception arguments. */
@@ -384,13 +380,6 @@ set_add_key(register PySetObject *so, PyObject *key)
 {
 	register long hash;
 	register Py_ssize_t n_used;
-
-  // pgbovine
-  if (SlopNA_CheckExact(key)) {
-    log_NA_event("set.add(NA)");
-    return 0;
-  }
-
 
 	if (!PyString_CheckExact(key) ||
 	    (hash = ((PyStringObject *) key)->ob_shash) == -1) {

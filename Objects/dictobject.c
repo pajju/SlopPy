@@ -9,9 +9,6 @@
 
 #include "Python.h"
 
-#include "NAobject.h" // pgbovine
-#include "slop.h" // pgbovine
-
 
 /* Set a key error with the specified argument, wrapping it in a
  * tuple automatically so that tuple keys are not unpacked as the
@@ -1875,15 +1872,8 @@ dict_setdefault(register PyDictObject *mp, PyObject *args)
 	val = ep->me_value;
 	if (val == NULL) {
 		val = failobj;
-
-    // pgbovine
-    if (SlopNA_CheckExact(failobj)) {
-      log_NA_event("dict.setdefault(*, NA)");
-    }
-    else {
-      if (PyDict_SetItem((PyObject*)mp, key, failobj))
-        val = NULL;
-    }
+		if (PyDict_SetItem((PyObject*)mp, key, failobj))
+			val = NULL;
 	}
 	Py_XINCREF(val);
 	return val;
@@ -2222,30 +2212,7 @@ dict_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 static int
 dict_init(PyObject *self, PyObject *args, PyObject *kwds)
 {
-  // pgbovine - eliminate all NA objects from kwds to support things like:
-  //   assert dict(key1=x, key2=x, hello='world') == {'hello' : 'world'}
-  // where x is an NA object
-  if (kwds) {
-    PyObject* new_kwds = PyDict_New();
-
-    PyObject* k = NULL;
-    PyObject* v = NULL;
-    Py_ssize_t pos = 0;
-    while (PyDict_Next(kwds, &pos, &k, &v)) {
-      if (SlopNA_CheckExact(v)) {
-        log_NA_event("dict_init(value=NA)");
-        continue;
-      }
-      PyDict_SetItem(new_kwds, k, v);
-    }
-
-    int ret = dict_update_common(self, args, new_kwds, "dict");
-    Py_XDECREF(new_kwds);
-    return ret;
-  }
-  else {
-    return dict_update_common(self, args, kwds, "dict");
-  }
+	return dict_update_common(self, args, kwds, "dict");
 }
 
 static PyObject *

@@ -2,9 +2,6 @@
 
 #include "Python.h"
 
-#include "NAobject.h" // pgbovine
-#include "slop.h" // pgbovine
-
 #ifdef STDC_HEADERS
 #include <stddef.h>
 #else
@@ -222,12 +219,6 @@ PyList_SetItem(register PyObject *op, register Py_ssize_t i,
 static int
 ins1(PyListObject *self, Py_ssize_t where, PyObject *v)
 {
-  // pgbovine
-  if (SlopNA_CheckExact(v)) {
-    log_NA_event("list.insert(NA)");
-    return 0; // emulate a regular return
-  }
-
 	Py_ssize_t i, n = Py_SIZE(self);
 	PyObject **items;
 	if (v == NULL) {
@@ -271,12 +262,6 @@ PyList_Insert(PyObject *op, Py_ssize_t where, PyObject *newitem)
 static int
 app1(PyListObject *self, PyObject *v)
 {
-  // pgbovine
-  if (SlopNA_CheckExact(v)) {
-    log_NA_event("list.append(NA)");
-    return 0; // emulate a regular return
-  }
-
 	Py_ssize_t n = PyList_GET_SIZE(self);
 
 	assert (v != NULL);
