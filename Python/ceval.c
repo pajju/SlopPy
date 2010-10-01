@@ -2294,7 +2294,12 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
 		case FOR_ITER:
 			/* before: [iter]; after: [iter, iter()] *or* [] */
 			v = TOP();
-			x = (*v->ob_type->tp_iternext)(v);
+
+      // pgbovine - skip over NA objects when iterating
+      do {
+        x = (*v->ob_type->tp_iternext)(v);
+      } while (x && SlopNA_CheckExact(x));
+
 			if (x != NULL) {
 				PUSH(x);
 				PREDICT(STORE_FAST);
