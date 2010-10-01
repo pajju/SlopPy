@@ -5,4 +5,4 @@
 
 Locals: {'__builtins__': <module '__builtin__' (built-in)>, '__file__': 'regression-tests/list_comp.py', '__package__': None, '_[1]': [1, 2], 'lst': ['1', '2', 'baaad', '3', '4'], '__name__': '__main__', 'line': 'baaad', '__doc__': None}
 }
-{list.append(NA) | regression-tests/list_comp.py <module>:5}
+{iterator skipped over NA | regression-tests/list_comp.py <module>:7}

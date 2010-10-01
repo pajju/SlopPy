@@ -1,0 +1,11 @@
+{NA <type 'exceptions.ZeroDivisionError'> 'integer division or modulo by zero'
+ Traceback (most recent call last):
+  File "regression-tests/iter_test.py", line 3, in <module>
+    x = 1 / 0
+
+Locals: {'__builtins__': <module '__builtin__' (built-in)>, '__name__': '__main__', '__file__': 'regression-tests/iter_test.py', '__doc__': None, '__package__': None}
+}
+{iterator skipped over NA | regression-tests/iter_test.py <module>:9}
+{iterator skipped over NA | regression-tests/iter_test.py <module>:17}
+{iterator skipped over NA | regression-tests/iter_test.py <module>:17}
+{iterator skipped over NA | regression-tests/iter_test.py <module>:31}

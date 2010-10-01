@@ -2296,9 +2296,16 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
 			v = TOP();
 
       // pgbovine - skip over NA objects when iterating
-      do {
+      while (1) {
         x = (*v->ob_type->tp_iternext)(v);
-      } while (x && SlopNA_CheckExact(x));
+
+        if (x && SlopNA_CheckExact(x)) {
+          log_NA_event("iterator skipped over NA");
+        }
+        else {
+          break;
+        }
+      }
 
 			if (x != NULL) {
 				PUSH(x);
